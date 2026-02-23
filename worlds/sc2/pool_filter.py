@@ -236,6 +236,28 @@ class ValidInventory:
         for item in inventory:
             item.filter_flags &= ~ItemFilterFlags.Excluded
 
+        # Limit strains and aspects per unit
+        strain_group_list = [
+            item_groups.zergling_strains,
+            item_groups.roach_strains,
+            item_groups.baneling_strains,
+            item_groups.swarm_host_strains,
+            item_groups.ultralisk_strains,
+        ]
+        for strain_group in strain_group_list:
+            group_items = [item for item in inventory if item.name in strain_group]
+            self.world.random.shuffle(group_items)
+            cull_items_over_maximum(group_items, self.world.options.max_strains_per_zerg_unit.value)
+
+        aspect_group_list = [
+            item_groups.hydralisk_aspects,
+            item_groups.mutalisk_corruptor_aspects,
+        ]
+        for aspect_group in aspect_group_list:
+            group_items = [item for item in inventory if item.name in aspect_group]
+            self.world.random.shuffle(group_items)
+            cull_items_over_maximum(group_items, self.world.options.max_aspects_per_zerg_unit.value)
+
         # Determine item groups to be constrained by min/max upgrades per unit
         group_to_item: Dict[str, List[StarcraftItem]] = {}
         group: str = ""
@@ -283,27 +305,6 @@ class ValidInventory:
         nova_gadget_items = [item for item in inventory if item.name in item_groups.nova_gadgets]
         self.world.random.shuffle(nova_gadget_items)
         cull_items_over_maximum(nova_gadget_items, self.world.options.nova_max_gadgets.value)
-
-        strain_group_list = [
-            item_groups.zergling_strains,
-            item_groups.roach_strains,
-            item_groups.baneling_strains,
-            item_groups.swarm_host_strains,
-            item_groups.ultralisk_strains,
-        ]
-        for strain_group in strain_group_list:
-            group_items = [item for item in inventory if item.name in strain_group]
-            self.world.random.shuffle(group_items)
-            cull_items_over_maximum(group_items, self.world.options.max_strains_per_zerg_unit.value)
-
-        aspect_group_list = [
-            item_groups.hydralisk_aspects,
-            item_groups.mutalisk_corruptor_aspects,
-        ]
-        for aspect_group in aspect_group_list:
-            group_items = [item for item in inventory if item.name in aspect_group]
-            self.world.random.shuffle(group_items)
-            cull_items_over_maximum(group_items, self.world.options.max_aspects_per_zerg_unit.value)
 
         # Determining if the full-size inventory can complete campaign
         # Note(mm): Now that user excludes are checked against logic, this can probably never fail unless there's a bug.
