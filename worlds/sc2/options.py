@@ -1372,6 +1372,10 @@ class MaxAspectsPerZergUnit(Range):
     range_end = 2
     default = 2
 
+class LinkMercenariesToBaseItem(Toggle):
+    """Links mercenary units to their base unit counterparts."""
+    display_name = "Link Mercenaries to Base Item"
+
 @dataclass
 class Starcraft2Options(PerGameCommonOptions):
     start_inventory: Sc2StartInventory  # type: ignore
@@ -1462,6 +1466,7 @@ class Starcraft2Options(PerGameCommonOptions):
     mission_order_scouting: MissionOrderScouting
     max_strains_per_zerg_unit: MaxStrainsPerZergUnit
     max_aspects_per_zerg_unit: MaxAspectsPerZergUnit
+    link_mercenaries_to_base_item: LinkMercenariesToBaseItem
 
     custom_mission_order: CustomMissionOrder
 

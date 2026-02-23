@@ -771,46 +771,46 @@ item_table = {
 
     item_names.WAR_PIGS:
         ItemData(500 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 0, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.WAR_PIGS_CONDITION),
     item_names.DEVIL_DOGS:
         ItemData(501 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 1, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.DEVIL_DOGS_CONDITION),
     item_names.HAMMER_SECURITIES:
         ItemData(502 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 2, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.HAMMER_SECURITIES_CONDITION),
     item_names.SPARTAN_COMPANY:
         ItemData(503 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 3, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.SPARTAN_COMPANY_CONDITION),
     item_names.SIEGE_BREAKERS:
         ItemData(504 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 4, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.SIEGE_BREAKERS_CONDITION),
     item_names.HELS_ANGELS:
         ItemData(505 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 5, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.HELS_ANGELS_CONDITION),
     item_names.DUSK_WINGS:
         ItemData(506 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 6, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.DUSK_WINGS_CONDITION),
     item_names.JACKSONS_REVENGE:
         ItemData(507 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 7, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.JACKSONS_REVENGE_CONDITION),
     item_names.SKIBIS_ANGELS:
         ItemData(508 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 8, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.SKIBIS_ANGELS_CONDITION),
     item_names.DEATH_HEADS:
         ItemData(509 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 9, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.DEATH_HEADS_CONDITION),
     item_names.WINGED_NIGHTMARES:
         ItemData(510 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 10, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.WINGED_NIGHTMARES_CONDITION),
     item_names.MIDNIGHT_RIDERS:
         ItemData(511 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 11, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.MIDNIGHT_RIDERS_CONDITION),
     item_names.BRYNHILDS:
         ItemData(512 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 12, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.BRYNHILDS_CONDITION),
     item_names.JOTUN:
         ItemData(513 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Mercenary, 13, SC2Race.TERRAN,
-                 classification=ItemClassification.progression_skip_balancing),
+                 classification=ItemClassification.progression_skip_balancing, parent=parent_names.JOTUN_CONDITION),
 
     item_names.ULTRA_CAPACITORS:
         ItemData(600 + SC2WOL_ITEM_ID_OFFSET, TerranItemType.Laboratory, 0, SC2Race.TERRAN),
@@ -1563,16 +1563,15 @@ item_table = {
     item_names.KERRIGAN_LEVELS_70: ItemData(512 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Level, 70, SC2Race.ZERG, quantity=0, classification=ItemClassification.progression),
 
     # Zerg Mercs
-    item_names.INFESTED_MEDICS: ItemData(600 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 0, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
-    item_names.INFESTED_SIEGE_BREAKERS: ItemData(601 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 1, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
-    item_names.INFESTED_DUSK_WINGS: ItemData(602 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 2, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
-    item_names.DEVOURING_ONES: ItemData(603 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 3, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
-    item_names.HUNTER_KILLERS: ItemData(604 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 4, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
-    item_names.WISE_OLD_TORRASQUE: ItemData(605 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 5, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
+    item_names.INFESTED_MEDICS: ItemData(600 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 0, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing, parent=parent_names.INFESTED_MEDICS_CONDITION),
+    item_names.INFESTED_SIEGE_BREAKERS: ItemData(601 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 1, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing, parent=parent_names.INFESTED_SIEGE_BREAKERS_CONDITION),
+    item_names.INFESTED_DUSK_WINGS: ItemData(602 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 2, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing, parent=parent_names.INFESTED_DUSK_WINGS_CONDITION),
+    item_names.DEVOURING_ONES: ItemData(603 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 3, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing, parent=parent_names.DEVOURING_ONES_CONDITION),
+    item_names.HUNTER_KILLERS: ItemData(604 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 4, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing, parent=parent_names.HUNTER_KILLERS_CONDITION),
+    item_names.WISE_OLD_TORRASQUE: ItemData(605 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 5, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing, parent=parent_names.TORRASQUE_MERC_CONDITION),
     item_names.HUNTERLING: ItemData(606 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 6, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
     item_names.YGGDRASIL: ItemData(607 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 7, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
-    item_names.CAUSTIC_HORRORS: ItemData(608 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 8, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
-
+    item_names.CAUSTIC_HORRORS: ItemData(608 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Mercenary, 8, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing, parent=parent_names.CAUSTIC_HORRORS_CONDITION),
 
     # Misc Upgrades
     item_names.OVERLORD_VENTRAL_SACS: ItemData(700 + SC2HOTS_ITEM_ID_OFFSET, ZergItemType.Evolution_Pit, 6, SC2Race.ZERG, classification=ItemClassification.progression_skip_balancing),
