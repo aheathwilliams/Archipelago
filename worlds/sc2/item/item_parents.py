@@ -78,6 +78,19 @@ class AnyOfGroupAndOneOtherItem(PresenceRule):
         return sorted(self.group) + [self.item_name]
 
 
+class MercenariesNotLinkedOrItem(PresenceRule):
+    def __init__(self, item_name: str) -> None:
+        self.item_name = item_name
+        self.constraint_group = None  # Keep mercenaries from counting towards the parent unit's upgrade count
+        self.display_string = item_name
+
+    def __call__(self, inventory: Iterable[str], options: 'Starcraft2Options') -> bool:
+        return (options.link_mercenaries_to_base_item.value == 0) or self.item_name in inventory
+
+    def parent_items(self) -> List[str]:
+        return [self.item_name]
+
+
 class MorphlingOrItem(PresenceRule):
     def __init__(self, item_name: str, has_parent: bool = True) -> None:
         self.item_name = item_name
@@ -132,6 +145,20 @@ parent_present[parent_names.STARSHIP_WEAPON_UNITS] = AnyOf(item_groups.starport_
 parent_present[parent_names.VEHICLE_UNITS] = AnyOf(item_groups.factory_units, display_string='Terran Vehicles')
 parent_present[parent_names.VEHICLE_WEAPON_UNITS] = AnyOf(item_groups.factory_wa_group, display_string='Terran Vehicles')
 parent_present[parent_names.TERRAN_MERCENARIES] = AnyOf(item_groups.terran_mercenaries, display_string='Terran Mercenaries')
+parent_present[parent_names.WAR_PIGS_CONDITION] = MercenariesNotLinkedOrItem(item_names.MARINE)
+parent_present[parent_names.DEVIL_DOGS_CONDITION] = MercenariesNotLinkedOrItem(item_names.FIREBAT)
+parent_present[parent_names.HAMMER_SECURITIES_CONDITION] = MercenariesNotLinkedOrItem(item_names.GOLIATH)
+parent_present[parent_names.SPARTAN_COMPANY_CONDITION] = MercenariesNotLinkedOrItem(item_names.MARAUDER)
+parent_present[parent_names.SIEGE_BREAKERS_CONDITION] = MercenariesNotLinkedOrItem(item_names.SIEGE_TANK)
+parent_present[parent_names.HELS_ANGELS_CONDITION] = MercenariesNotLinkedOrItem(item_names.VIKING)
+parent_present[parent_names.DUSK_WINGS_CONDITION] = MercenariesNotLinkedOrItem(item_names.BANSHEE)
+parent_present[parent_names.JACKSONS_REVENGE_CONDITION] = MercenariesNotLinkedOrItem(item_names.BATTLECRUISER)
+parent_present[parent_names.SKIBIS_ANGELS_CONDITION] = MercenariesNotLinkedOrItem(item_names.MEDIC)
+parent_present[parent_names.DEATH_HEADS_CONDITION] = MercenariesNotLinkedOrItem(item_names.REAPER)
+parent_present[parent_names.WINGED_NIGHTMARES_CONDITION] = MercenariesNotLinkedOrItem(item_names.WRAITH)
+parent_present[parent_names.MIDNIGHT_RIDERS_CONDITION] = MercenariesNotLinkedOrItem(item_names.LIBERATOR)
+parent_present[parent_names.BRYNHILDS_CONDITION] = MercenariesNotLinkedOrItem(item_names.VALKYRIE)
+parent_present[parent_names.JOTUN_CONDITION] = MercenariesNotLinkedOrItem(item_names.JOTUN)
 
 # Zerg
 parent_present[parent_names.ANY_NYDUS_WORM] = AnyOf((item_names.NYDUS_WORM, item_names.ECHIDNA_WORM), item_names.NYDUS_WORM)
@@ -160,6 +187,13 @@ parent_present[parent_names.ZERG_OUROBOUROS_CONDITION] = AnyOfGroupAndOneOtherIt
     (item_names.ZERGLING, item_names.ROACH, item_names.HYDRALISK, item_names.ABERRATION),
     item_names.ECHIDNA_WORM
 )
+parent_present[parent_names.DEVOURING_ONES_CONDITION] = MercenariesNotLinkedOrItem(item_names.ZERGLING)
+parent_present[parent_names.HUNTER_KILLERS_CONDITION] = MercenariesNotLinkedOrItem(item_names.HYDRALISK)
+parent_present[parent_names.TORRASQUE_MERC_CONDITION] = MercenariesNotLinkedOrItem(item_names.ULTRALISK)
+parent_present[parent_names.CAUSTIC_HORRORS_CONDITION] = MercenariesNotLinkedOrItem(item_names.ROACH)
+parent_present[parent_names.INFESTED_MEDICS_CONDITION] = MercenariesNotLinkedOrItem(item_names.MEDIC)
+parent_present[parent_names.INFESTED_SIEGE_BREAKERS_CONDITION] = MercenariesNotLinkedOrItem(item_names.SIEGE_TANK)
+parent_present[parent_names.INFESTED_DUSK_WINGS_CONDITION] = MercenariesNotLinkedOrItem(item_names.BANSHEE)
 
 # Protoss
 parent_present[parent_names.ARCHON_SOURCE] = AnyOf(
