@@ -1460,6 +1460,8 @@ class Starcraft2Options(PerGameCommonOptions):
     research_cost_reduction_per_item: ResearchCostReductionPerItem
     filler_items_distribution: FillerItemsDistribution
     mission_order_scouting: MissionOrderScouting
+    max_strains_per_zerg_unit: MaxStrainsPerZergUnit
+    max_aspects_per_zerg_unit: MaxAspectsPerZergUnit
 
     custom_mission_order: CustomMissionOrder
 
