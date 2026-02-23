@@ -131,6 +131,13 @@ class ItemGroupNames:
     HOTS_BUILDINGS = "HotS Buildings"
     HOTS_STRAINS = "HotS Strains"
     """Vanilla HotS strains (the upgrades you play a mini-mission for)"""
+    ZERGLING_STRAINS = "Zergling Strains"
+    ROACH_STRAINS = "Roach Strains"
+    HYDRALISK_ASPECTS = "Hydralisk Aspects"
+    BANELING_STRAINS = "Baneling Strains"
+    SWARM_HOST_STRAINS = "Swarm Host Strains"
+    MUTALISK_CORRUPTOR_ASPECTS = "Mutalisk/Corruptor Aspects"
+    ULTRALISK_STRAINS = "Ultralisk Strains"
     HOTS_MUTATIONS = "HotS Mutations"
     """Vanilla HotS Mutations (basic toggleable unit upgrades)"""
     HOTS_GLOBAL_UPGRADES = "HotS Global Upgrades"
@@ -760,6 +767,27 @@ item_name_groups[ItemGroupNames.ZERG_LADDER_UNITS] = [
 # Zerg Upgrades
 item_name_groups[ItemGroupNames.HOTS_STRAINS] = hots_strains = [
     item_name for item_name, item_data in item_tables.item_table.items() if item_data.type == item_tables.ZergItemType.Strain
+]
+item_name_groups[ItemGroupNames.ZERGLING_STRAINS] = zergling_strains = [
+    item_names.ZERGLING_SWARMLING_STRAIN, item_names.ZERGLING_RAPTOR_STRAIN,
+]
+item_name_groups[ItemGroupNames.ROACH_STRAINS] = roach_strains = [
+    item_names.ROACH_VILE_STRAIN, item_names.ROACH_CORPSER_STRAIN,
+]
+item_name_groups[ItemGroupNames.HYDRALISK_ASPECTS] = hydralisk_aspects = [
+    item_names.LURKER, item_names.IMPALER,
+]
+item_name_groups[ItemGroupNames.BANELING_STRAINS] = baneling_strains = [
+    item_names.BANELING_HUNTER_STRAIN, item_names.BANELING_SPLITTER_STRAIN,
+]
+item_name_groups[ItemGroupNames.SWARM_HOST_STRAINS] = swarm_host_strains = [
+    item_names.SWARM_HOST_CREEPER_STRAIN, item_names.SWARM_HOST_CARRION_STRAIN,
+]
+item_name_groups[ItemGroupNames.MUTALISK_CORRUPTOR_ASPECTS] = mutalisk_corruptor_aspects = [
+    item_names.BROOD_LORD, item_names.DEVOURER,
+]
+item_name_groups[ItemGroupNames.ULTRALISK_STRAINS] = ultralisk_strains = [
+    item_names.ULTRALISK_NOXIOUS_STRAIN, item_names.ULTRALISK_TORRASQUE_STRAIN,
 ]
 item_name_groups[ItemGroupNames.HOTS_MUTATIONS] = hots_mutations = [
     item_names.ZERGLING_HARDENED_CARAPACE, item_names.ZERGLING_ADRENAL_OVERLOAD, item_names.ZERGLING_METABOLIC_BOOST,

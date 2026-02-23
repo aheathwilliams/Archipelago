@@ -1358,6 +1358,19 @@ class FillerItemsDistribution(ItemDict):
             raise Exception("Cannot have negative item weight.")
         super(ItemDict, self).__init__(value)
 
+class MaxStrainsPerZergUnit(Range):
+    """Maximum number of strains per Zerg unit in the item pool."""
+    display_name = "Max Strains Per Zerg Unit"
+    range_start = 1
+    range_end = 2
+    default = 2
+
+class MaxAspectsPerZergUnit(Range):
+    """Maximum number of aspects per Zerg unit in the item pool."""
+    display_name = "Max Aspects Per Zerg Unit"
+    range_start = 1
+    range_end = 2
+    default = 2
 
 @dataclass
 class Starcraft2Options(PerGameCommonOptions):
