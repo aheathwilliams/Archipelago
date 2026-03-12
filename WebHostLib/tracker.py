@@ -1297,8 +1297,9 @@ if "Starcraft 2" in network_data_package["games"]:
         display_data["kerrigan_level"] = kerrigan_level
 
         # Hero presence
-        display_data["kerrigan_present"] = slot_data.get("kerrigan_presence", 0) == 0
-        display_data["nova_present"] = have_nco_locations
+        # TODO: Figure out how to check this from hero_presence
+        # display_data["kerrigan_present"] = slot_data.get("kerrigan_presence", 0) == 0
+        # display_data["nova_present"] = have_nco_locations
 
         # Upgrades
         TERRAN_INFANTRY_WEAPON_ID = 100 + SC2WOL_ITEM_ID_OFFSET

@@ -146,6 +146,7 @@ class ItemGroupNames:
     KERRIGAN_HOTS_ABILITIES = "Kerrigan HotS Abilities"
     KERRIGAN_ACTIVE_ABILITIES = "Kerrigan Active Abilities"
     KERRIGAN_LOGIC_ACTIVE_ABILITIES = "Kerrigan Logic Active Abilities"
+    KERRIGAN_SOLO_ACTIVE_ABILITIES = "Kerrigan Solo Active Abilities"
     KERRIGAN_PASSIVES = "Kerrigan Passives"
     KERRIGAN_TIER_1 = "Kerrigan Tier 1"
     KERRIGAN_TIER_2 = "Kerrigan Tier 2"
@@ -620,7 +621,10 @@ item_name_groups[ItemGroupNames.ZERG_MORPHS] = zerg_morphs = [
 item_name_groups[ItemGroupNames.ZERG_UNITS] = zerg_units = zerg_nonmorph_units + zerg_morphs
 # For W/A upgrades
 zerg_ground_units = [
-    item_names.ZERGLING, item_names.SWARM_QUEEN, item_names.ROACH, item_names.HYDRALISK, item_names.ABERRATION,
+    item_names.ZERGLING,
+    item_names.HIVE_QUEEN,
+    item_names.SWARM_QUEEN,
+    item_names.ROACH, item_names.HYDRALISK, item_names.ABERRATION,
     item_names.SWARM_HOST, item_names.INFESTOR, item_names.ULTRALISK, item_names.BANELING,
     item_names.LURKER, item_names.IMPALER, item_names.TYRANNOZOR,
     item_names.RAVAGER, item_names.DEFILER, item_names.PRIMAL_IGNITER,
@@ -633,7 +637,9 @@ zerg_melee_wa = [
     item_names.TYRANNOZOR, item_names.INFESTED_BUNKER, item_names.PYGALISK,
 ]
 zerg_ranged_wa = [
-    item_names.SWARM_QUEEN, item_names.ROACH, item_names.HYDRALISK, item_names.SWARM_HOST,
+    item_names.HIVE_QUEEN,
+    item_names.SWARM_QUEEN,
+    item_names.ROACH, item_names.HYDRALISK, item_names.SWARM_HOST,
     item_names.LURKER, item_names.IMPALER, item_names.TYRANNOZOR,
     item_names.RAVAGER, item_names.PRIMAL_IGNITER, item_names.INFESTED_MARINE,
     item_names.INFESTED_BUNKER, item_names.INFESTED_DIAMONDBACK, item_names.INFESTED_SIEGE_TANK,
@@ -684,6 +690,9 @@ item_name_groups[ItemGroupNames.KERRIGAN_ACTIVE_ABILITIES] = kerrigan_active_abi
 item_name_groups[ItemGroupNames.KERRIGAN_LOGIC_ACTIVE_ABILITIES] = kerrigan_logic_active_abilities = [
     item_name for item_name in kerrigan_active_abilities if item_name != item_names.KERRIGAN_ASSIMILATION_AURA
 ]
+item_name_groups[ItemGroupNames.KERRIGAN_SOLO_ACTIVE_ABILITIES] = kerrigan_solo_active_abilities = [
+    item_name for item_name in kerrigan_logic_active_abilities if item_name != item_names.KERRIGAN_WILD_MUTATION
+]
 item_name_groups[ItemGroupNames.KERRIGAN_TIER_1] = kerrigan_tier_1 = [
     item_names.KERRIGAN_KINETIC_BLAST, item_names.KERRIGAN_HEROIC_FORTITUDE, item_names.KERRIGAN_LEAPING_STRIKE
 ]
@@ -708,14 +717,14 @@ item_name_groups[ItemGroupNames.KERRIGAN_TIER_7] = kerrigan_tier_7 = [
 item_name_groups[ItemGroupNames.KERRIGAN_ULTIMATES] = kerrigan_ultimates = [
     *kerrigan_tier_7, item_names.KERRIGAN_ASSIMILATION_AURA, item_names.KERRIGAN_IMMOBILIZATION_WAVE
 ]
-item_name_groups[ItemGroupNames.KERRIGAN_NON_ULTIMATES] = kerrigan_non_ulimates = [
+item_name_groups[ItemGroupNames.KERRIGAN_NON_ULTIMATES] = kerrigan_non_ultimates = [
     item for item in kerrigan_abilities if item not in kerrigan_ultimates
 ]
 item_name_groups[ItemGroupNames.KERRIGAN_LOGIC_ULTIMATES] = kerrigan_logic_ultimates = [
     item for item in kerrigan_ultimates if item != item_names.KERRIGAN_ASSIMILATION_AURA
 ]
 item_name_groups[ItemGroupNames.KERRIGAN_NON_ULTIMATE_ACTIVE_ABILITIES] = kerrigan_non_ulimate_active_abilities = [
-    item for item in kerrigan_non_ulimates if item in kerrigan_active_abilities
+    item for item in kerrigan_non_ultimates if item in kerrigan_active_abilities
 ]
 item_name_groups[ItemGroupNames.KERRIGAN_HOTS_ABILITIES] = kerrigan_hots_abilities = [
     ability for tiers in [
@@ -748,7 +757,7 @@ item_name_groups[ItemGroupNames.ZERG_SC1_UNITS] = [
 ]
 item_name_groups[ItemGroupNames.ZERG_LADDER_UNITS] = [
     item_names.ZERGLING,
-    item_names.SWARM_QUEEN,  # Replace: Hive Queen
+    item_names.HIVE_QUEEN,
     item_names.BANELING,
     item_names.ROACH,
     item_names.RAVAGER,
@@ -867,7 +876,7 @@ item_name_groups[ItemGroupNames.INFESTED_TERRAN_ITEMS] = (
 # Co-op Zerg
 item_name_groups[ItemGroupNames.COOP_KERRIGAN_UNITS] = [
     item_names.ZERGLING,
-    item_names.SWARM_QUEEN,  # Not implemented: Hive Queen
+    item_names.HIVE_QUEEN,
     item_names.HYDRALISK,
     item_names.LURKER,
     item_names.ULTRALISK,
@@ -876,7 +885,7 @@ item_name_groups[ItemGroupNames.COOP_KERRIGAN_UNITS] = [
 ]
 item_name_groups[ItemGroupNames.COOP_ZAGARA_UNITS] = [
     item_names.ZERGLING,
-    item_names.SWARM_QUEEN,  # Not implemented: Hive Queen
+    item_names.HIVE_QUEEN,
     item_names.BANELING,
     item_names.ABERRATION,
     item_names.SCOURGE,

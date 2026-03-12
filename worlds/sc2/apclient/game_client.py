@@ -101,7 +101,12 @@ class MissionClient:
         missions_beaten = self.missions_beaten_count()
         kerrigan_level = get_kerrigan_level(self.ctx, start_items, missions_beaten)
         kerrigan_options = calculate_kerrigan_options(self.ctx)
-        nova_presence = calculate_nova_presence(self.ctx, mission)
+        if (mission.campaign in self.ctx.hero_presence
+            and mission.race in self.ctx.hero_presence[mission.campaign]):
+                hero_presence = self.ctx.hero_presence[mission.campaign][mission.race]
+        else:
+            hero_presence = 0
+        logger.debug(f"Hero settings for current mission: {hero_presence}") # TODO (Snarky): Disable on release
         grant_story_tech = calculate_story_tech(self.ctx, mission)
         soa_options = calculate_soa_options(self.ctx, mission)
         generic_upgrade_options = calculate_generic_upgrade_options(self.ctx)
@@ -116,27 +121,30 @@ class MissionClient:
             game_speed = self.ctx.game_speed_override
         else:
             game_speed = self.ctx.game_speed
-
+        skip_cutscenes = 1 if SC2World.settings.game_skip_cutscenes else 0
+        disable_forced_camera = 1 if SC2World.settings.game_disable_forced_camera else 0
+        nova_presence = 0  # unused for now
         error = banks.send_options(
             f" {difficulty}"
             f" {generic_upgrade_options}"
             f" {self.ctx.all_in_choice}"
             f" {game_speed}"
-            f" {self.ctx.disable_forced_camera}"
-            f" {self.ctx.skip_cutscenes}"
+            f" {disable_forced_camera}"
+            f" {skip_cutscenes}"
             f" {kerrigan_options}"
             f" {grant_story_tech}"
             f" {self.ctx.take_over_ai_allies}"
             f" {soa_options}"
             f" {self.ctx.mission_order}"
-            f" {int(nova_presence)}"
+            f" {nova_presence}" 
             f" {self.ctx.grant_story_levels}"
             f" {self.ctx.enable_morphling}"
             f" {mission_variant}"
             f" {trade_options}"
             f" {self.ctx.difficulty_damage_modifier}"
             f" {self.ctx.mercenary_highlanders}" # TODO: Possibly rework into unit options
-            f" {self.ctx.war_council_nerfs}"
+            f" {self.ctx.show_war_council_nerfs}"
+            f" {hero_presence}"
         )
         if isinstance(error, Error):
             logger.error(error.message)
@@ -209,7 +217,7 @@ class MissionClient:
                 self.ctx.trade_underway = True
                 self.ctx.trade_response = None
                 async_start(self.ctx.trade_receive(1))
-                # TODO: handle supply, self.ctx.trade_response = "?TradeFail Void Trade rejected: Not enough supply."
+                # TODO (snarky): handle supply, self.ctx.trade_response = "?TradeFail Void Trade rejected: Not enough supply."
             elif int(trade_receive_string) == 5:
                 self.ctx.trade_underway = True
                 self.ctx.trade_response = None
@@ -559,12 +567,26 @@ def linux_get_sc2_pid() -> int | None:
     return None
 
 
+def try_decode(line: bytes, encoding: str) -> str | None:
+    try:
+        return line.decode(encoding)
+    except UnicodeDecodeError:
+        return None
+
+
 def windows_get_sc2_pid() -> int | None:
     result_bytes = subprocess.check_output(["tasklist"])
-    lines = result_bytes.decode("utf-8").split("\n")
-    for line in lines:
-        if "SC2_x64.exe" not in line:
+    lines = result_bytes.split(b"\r\n")
+    for line_bytes in lines:
+        if b"SC2_x64.exe" not in line_bytes:
             continue
+        line = try_decode(line_bytes, "utf-8")
+        if line is None:
+            line = try_decode(line_bytes, "cp437")  # Windows why?
+        if line is None:
+            logger.warning(f"Unable to decode PID line {line_bytes!r}")
+            continue
+
         parts = [p for p in line.split() if p]
         # Format: Image Name, PID, Session Name, Session#, Mem Usage
         if len(parts) < 2:
@@ -863,10 +885,10 @@ def get_kerrigan_level(ctx: 'SC2Context', items: dict[SC2Race, list[int]], missi
 def calculate_kerrigan_options(ctx: 'SC2Context') -> int:
     result = 0
 
-    # Bits 0, 1
-    # Kerrigan unit available
-    if ctx.kerrigan_presence in options.kerrigan_unit_available:
-        result |= 1 << 0
+    # # Bits 0, 1
+    # # Kerrigan unit available
+    # if ctx.kerrigan_presence in options.kerrigan_unit_available:
+    #     result |= 1 << 0
 
     # Bit 2
     # Kerrigan primal status by map
@@ -876,27 +898,11 @@ def calculate_kerrigan_options(ctx: 'SC2Context') -> int:
     return result
 
 
-def calculate_nova_presence(ctx: 'SC2Context', mission: SC2Mission) -> int:
-    result = 0
-    if mission.campaign == SC2Campaign.NCO:
-        if mission.race == SC2Race.TERRAN and options.NovaPresenceOptions.NCO_TERRAN in ctx.nova_presence:
-            result = 1
-        elif mission.race == SC2Race.ZERG and options.NovaPresenceOptions.NCO_ZERG in ctx.nova_presence:
-            result = 1
-        elif mission.race == SC2Race.PROTOSS and options.NovaPresenceOptions.NCO_PROTOSS in ctx.nova_presence:
-            result = 1
-    if (mission == SC2Mission.GHOST_OF_A_CHANCE
-        and options.NovaPresenceOptions.GHOST_OF_A_CHANCE in ctx.nova_presence
-    ):
-        result = 1
-    return result
-
-
 def calculate_story_tech(ctx: 'SC2Context', mission: SC2Mission) -> bool:
     if (
         MissionFlag.Nova in mission.flags
         and MissionFlag.NoBuild in mission.flags
-        and ctx.nova_grant_story_tech
+        and ctx.nova_items_granted
     ):
         result = options.GrantStoryTech.option_grant
     else:

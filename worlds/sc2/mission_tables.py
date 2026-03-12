@@ -44,7 +44,8 @@ class MissionFlag(IntFlag):
     VsProtoss     = auto()
     HasRaceSwap   = auto()  # The mission has variants that use different factions from the vanilla experience.
     RaceSwap      = auto()  # The mission uses different factions from the vanilla experience.
-    WoLNova       = auto()  # The player controls WoL Nova in the mission
+    Artanis       = auto()  # The player controls Artanis in the mission. Unused for now.
+    HeroSystemUnsupported = auto()  # The hero system currently does not support the mission.
 
     AiAlly        = AiTerranAlly|AiZergAlly|AiProtossAlly
     TimedDefense  = AutoScroller|Defense
@@ -130,7 +131,7 @@ class SC2Mission(Enum):
             return self.mission_name[:self.mission_name.find(' (')]
 
     # Wings of Liberty
-    LIBERATION_DAY = 1, "Liberation Day (Terran)", SC2Campaign.WOL, "Mar Sara", SC2Race.TERRAN, MissionPools.STARTER, "ap_liberation_day", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
+    LIBERATION_DAY = 1, "Liberation Day (Terran)", SC2Campaign.WOL, "Mar Sara", SC2Race.TERRAN, MissionPools.STARTER, "ap_liberation_day", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
     THE_OUTLAWS = 2, "The Outlaws (Terran)", SC2Campaign.WOL, "Mar Sara", SC2Race.TERRAN, MissionPools.EASY, "ap_the_outlaws", MissionFlag.Terran|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     ZERO_HOUR = 3, "Zero Hour (Terran)", SC2Campaign.WOL, "Mar Sara", SC2Race.TERRAN, MissionPools.STARTER, "ap_zero_hour", MissionFlag.Terran|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
     EVACUATION = 4, "Evacuation (Terran)", SC2Campaign.WOL, "Colonist", SC2Race.TERRAN, MissionPools.STARTER, "ap_evacuation", MissionFlag.Terran|MissionFlag.AutoScroller|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
@@ -145,41 +146,41 @@ class SC2Mission(Enum):
     DEVILS_PLAYGROUND = 13, "Devil's Playground (Terran)", SC2Campaign.WOL, "Covert", SC2Race.TERRAN, MissionPools.STARTER, "ap_devils_playground", MissionFlag.Terran|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
     WELCOME_TO_THE_JUNGLE = 14, "Welcome to the Jungle (Terran)", SC2Campaign.WOL, "Covert", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_welcome_to_the_jungle", MissionFlag.Terran|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
     BREAKOUT = 15, "Breakout (Terran)", SC2Campaign.WOL, "Covert", SC2Race.TERRAN, MissionPools.STARTER, "ap_breakout", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
-    GHOST_OF_A_CHANCE = 16, "Ghost of a Chance", SC2Campaign.WOL, "Covert", SC2Race.ANY, MissionPools.STARTER, "ap_ghost_of_a_chance", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.WoLNova
+    GHOST_OF_A_CHANCE = 16, "Ghost of a Chance", SC2Campaign.WOL, "Covert", SC2Race.ANY, MissionPools.STARTER, "ap_ghost_of_a_chance", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.HeroSystemUnsupported
     THE_GREAT_TRAIN_ROBBERY = 17, "The Great Train Robbery (Terran)", SC2Campaign.WOL, "Rebellion", SC2Race.TERRAN, MissionPools.EASY, "ap_the_great_train_robbery", MissionFlag.Terran|MissionFlag.AutoScroller|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     CUTTHROAT = 18, "Cutthroat (Terran)", SC2Campaign.WOL, "Rebellion", SC2Race.TERRAN, MissionPools.EASY, "ap_cutthroat", MissionFlag.Terran|MissionFlag.Countdown|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     ENGINE_OF_DESTRUCTION = 19, "Engine of Destruction (Terran)", SC2Campaign.WOL, "Rebellion", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_engine_of_destruction", MissionFlag.Terran|MissionFlag.AutoScroller|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     MEDIA_BLITZ = 20, "Media Blitz (Terran)", SC2Campaign.WOL, "Rebellion", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_media_blitz", MissionFlag.Terran|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
-    PIERCING_OF_THE_SHROUD = 21, "Piercing the Shroud", SC2Campaign.WOL, "Rebellion", SC2Race.TERRAN, MissionPools.STARTER, "ap_piercing_the_shroud", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsAll
+    PIERCING_OF_THE_SHROUD = 21, "Piercing the Shroud", SC2Campaign.WOL, "Rebellion", SC2Race.TERRAN, MissionPools.STARTER, "ap_piercing_the_shroud", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsAll|MissionFlag.HeroSystemUnsupported
     GATES_OF_HELL = 26, "Gates of Hell (Terran)", SC2Campaign.WOL, "Char", SC2Race.TERRAN, MissionPools.HARD, "ap_gates_of_hell", MissionFlag.Terran|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
-    BELLY_OF_THE_BEAST = 27, "Belly of the Beast", SC2Campaign.WOL, "Char", SC2Race.ANY, MissionPools.STARTER, "ap_belly_of_the_beast", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsZerg
+    BELLY_OF_THE_BEAST = 27, "Belly of the Beast", SC2Campaign.WOL, "Char", SC2Race.ANY, MissionPools.STARTER, "ap_belly_of_the_beast", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsZerg|MissionFlag.HeroSystemUnsupported
     SHATTER_THE_SKY = 28, "Shatter the Sky (Terran)", SC2Campaign.WOL, "Char", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_shatter_the_sky", MissionFlag.Terran|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
     ALL_IN = 29, "All-In (Terran)", SC2Campaign.WOL, "Char", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_all_in", MissionFlag.Terran|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
 
     # Prophecy
-    WHISPERS_OF_DOOM = 22, "Whispers of Doom", SC2Campaign.PROPHECY, "_1", SC2Race.ANY, MissionPools.STARTER, "ap_whispers_of_doom", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsZerg
+    WHISPERS_OF_DOOM = 22, "Whispers of Doom", SC2Campaign.PROPHECY, "_1", SC2Race.ANY, MissionPools.STARTER, "ap_whispers_of_doom", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsZerg|MissionFlag.HeroSystemUnsupported
     A_SINISTER_TURN = 23, "A Sinister Turn (Protoss)", SC2Campaign.PROPHECY, "_2", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_a_sinister_turn", MissionFlag.Protoss|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
-    ECHOES_OF_THE_FUTURE = 24, "Echoes of the Future (Protoss)", SC2Campaign.PROPHECY, "_3", SC2Race.PROTOSS, MissionPools.EASY, "ap_echoes_of_the_future", MissionFlag.Protoss|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
+    ECHOES_OF_THE_FUTURE = 24, "Echoes of the Future (Protoss)", SC2Campaign.PROPHECY, "_3", SC2Race.PROTOSS, MissionPools.EASY, "ap_echoes_of_the_future", MissionFlag.Protoss|MissionFlag.VsZerg|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
     IN_UTTER_DARKNESS = 25, "In Utter Darkness (Protoss)", SC2Campaign.PROPHECY, "_4", SC2Race.PROTOSS, MissionPools.HARD, "ap_in_utter_darkness", MissionFlag.Protoss|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
 
     # Heart of the Swarm
-    LAB_RAT = 30, "Lab Rat (Zerg)", SC2Campaign.HOTS, "Umoja", SC2Race.ZERG, MissionPools.STARTER, "ap_lab_rat", MissionFlag.Zerg|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
-    BACK_IN_THE_SADDLE = 31, "Back in the Saddle", SC2Campaign.HOTS, "Umoja", SC2Race.ANY, MissionPools.STARTER, "ap_back_in_the_saddle", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.NoBuild|MissionFlag.VsTZ
+    LAB_RAT = 30, "Lab Rat (Zerg)", SC2Campaign.HOTS, "Umoja", SC2Race.ZERG, MissionPools.STARTER, "ap_lab_rat", MissionFlag.Zerg|MissionFlag.VsTerran|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
+    BACK_IN_THE_SADDLE = 31, "Back in the Saddle", SC2Campaign.HOTS, "Umoja", SC2Race.ANY, MissionPools.STARTER, "ap_back_in_the_saddle", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.NoBuild|MissionFlag.VsTZ|MissionFlag.HeroSystemUnsupported
     RENDEZVOUS = 32, "Rendezvous (Zerg)", SC2Campaign.HOTS, "Umoja", SC2Race.ZERG, MissionPools.EASY, "ap_rendezvous", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.AutoScroller|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     HARVEST_OF_SCREAMS = 33, "Harvest of Screams (Zerg)", SC2Campaign.HOTS, "Kaldir", SC2Race.ZERG, MissionPools.EASY, "ap_harvest_of_screams", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
     SHOOT_THE_MESSENGER = 34, "Shoot the Messenger (Zerg)", SC2Campaign.HOTS, "Kaldir", SC2Race.ZERG, MissionPools.EASY, "ap_shoot_the_messenger", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.TimedDefense|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
-    ENEMY_WITHIN = 35, "Enemy Within (Zerg)", SC2Campaign.HOTS, "Kaldir", SC2Race.ZERG, MissionPools.EASY, "ap_enemy_within", MissionFlag.Zerg|MissionFlag.NoBuild|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
+    ENEMY_WITHIN = 35, "Enemy Within (Zerg)", SC2Campaign.HOTS, "Kaldir", SC2Race.ZERG, MissionPools.EASY, "ap_enemy_within", MissionFlag.Zerg|MissionFlag.NoBuild|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
     DOMINATION = 36, "Domination (Zerg)", SC2Campaign.HOTS, "Char", SC2Race.ZERG, MissionPools.EASY, "ap_domination", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.Countdown|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
     FIRE_IN_THE_SKY = 37, "Fire in the Sky (Zerg)", SC2Campaign.HOTS, "Char", SC2Race.ZERG, MissionPools.MEDIUM, "ap_fire_in_the_sky", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.Countdown|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     OLD_SOLDIERS = 38, "Old Soldiers (Zerg)", SC2Campaign.HOTS, "Char", SC2Race.ZERG, MissionPools.MEDIUM, "ap_old_soldiers", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     WAKING_THE_ANCIENT = 39, "Waking the Ancient (Zerg)", SC2Campaign.HOTS, "Zerus", SC2Race.ZERG, MissionPools.MEDIUM, "ap_waking_the_ancient", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
-    THE_CRUCIBLE = 40, "The Crucible (Zerg)", SC2Campaign.HOTS, "Zerus", SC2Race.ZERG, MissionPools.MEDIUM, "ap_the_crucible", MissionFlag.Zerg|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
-    SUPREME = 41, "Supreme", SC2Campaign.HOTS, "Zerus", SC2Race.ANY, MissionPools.MEDIUM, "ap_supreme", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.NoBuild|MissionFlag.VsZerg
+    THE_CRUCIBLE = 40, "The Crucible (Zerg)", SC2Campaign.HOTS, "Zerus", SC2Race.ZERG, MissionPools.MEDIUM, "ap_the_crucible", MissionFlag.Zerg|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
+    SUPREME = 41, "Supreme", SC2Campaign.HOTS, "Zerus", SC2Race.ANY, MissionPools.MEDIUM, "ap_supreme", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.NoBuild|MissionFlag.VsZerg|MissionFlag.HeroSystemUnsupported
     INFESTED = 42, "Infested (Zerg)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.ZERG, MissionPools.MEDIUM, "ap_infested", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     HAND_OF_DARKNESS = 43, "Hand of Darkness (Zerg)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.ZERG, MissionPools.HARD, "ap_hand_of_darkness", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.Countdown|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
-    PHANTOMS_OF_THE_VOID = 44, "Phantoms of the Void (Zerg)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.ZERG, MissionPools.MEDIUM, "ap_phantoms_of_the_void", MissionFlag.Zerg|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
-    WITH_FRIENDS_LIKE_THESE = 45, "With Friends Like These", SC2Campaign.HOTS, "Dominion Space", SC2Race.ANY, MissionPools.STARTER, "ap_with_friends_like_these", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsTerran
-    CONVICTION = 46, "Conviction", SC2Campaign.HOTS, "Dominion Space", SC2Race.ANY, MissionPools.MEDIUM, "ap_conviction", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.NoBuild|MissionFlag.VsTerran
+    PHANTOMS_OF_THE_VOID = 44, "Phantoms of the Void (Zerg)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.ZERG, MissionPools.MEDIUM, "ap_phantoms_of_the_void", MissionFlag.Zerg|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
+    WITH_FRIENDS_LIKE_THESE = 45, "With Friends Like These", SC2Campaign.HOTS, "Dominion Space", SC2Race.ANY, MissionPools.STARTER, "ap_with_friends_like_these", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.HeroSystemUnsupported
+    CONVICTION = 46, "Conviction", SC2Campaign.HOTS, "Dominion Space", SC2Race.ANY, MissionPools.MEDIUM, "ap_conviction", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.HeroSystemUnsupported
     PLANETFALL = 47, "Planetfall (Zerg)", SC2Campaign.HOTS, "Korhal", SC2Race.ZERG, MissionPools.HARD, "ap_planetfall", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.AutoScroller|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     DEATH_FROM_ABOVE = 48, "Death From Above (Zerg)", SC2Campaign.HOTS, "Korhal", SC2Race.ZERG, MissionPools.HARD, "ap_death_from_above", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
     THE_RECKONING = 49, "The Reckoning (Zerg)", SC2Campaign.HOTS, "Korhal", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_the_reckoning", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.VsTerran|MissionFlag.AiTerranAlly|MissionFlag.HasRaceSwap
@@ -187,10 +188,10 @@ class SC2Mission(Enum):
     # Prologue
     DARK_WHISPERS = 50, "Dark Whispers (Protoss)", SC2Campaign.PROLOGUE, "_1", SC2Race.PROTOSS, MissionPools.EASY, "ap_dark_whispers", MissionFlag.Protoss|MissionFlag.Countdown|MissionFlag.VsTZ|MissionFlag.HasRaceSwap
     GHOSTS_IN_THE_FOG = 51, "Ghosts in the Fog (Protoss)", SC2Campaign.PROLOGUE, "_2", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_ghosts_in_the_fog", MissionFlag.Protoss|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
-    EVIL_AWOKEN = 52, "Evil Awoken", SC2Campaign.PROLOGUE, "_3", SC2Race.PROTOSS, MissionPools.STARTER, "ap_evil_awoken", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsProtoss
+    EVIL_AWOKEN = 52, "Evil Awoken", SC2Campaign.PROLOGUE, "_3", SC2Race.PROTOSS, MissionPools.STARTER, "ap_evil_awoken", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsProtoss|MissionFlag.HeroSystemUnsupported
 
     # LotV
-    FOR_AIUR = 53, "For Aiur! (Protoss)", SC2Campaign.LOTV, "Aiur", SC2Race.ANY, MissionPools.STARTER, "ap_for_aiur", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
+    FOR_AIUR = 53, "For Aiur! (Protoss)", SC2Campaign.LOTV, "Aiur", SC2Race.ANY, MissionPools.STARTER, "ap_for_aiur", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsZerg|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
     THE_GROWING_SHADOW = 54, "The Growing Shadow (Protoss)", SC2Campaign.LOTV, "Aiur", SC2Race.PROTOSS, MissionPools.STARTER, "ap_the_growing_shadow", MissionFlag.Protoss|MissionFlag.VsPZ|MissionFlag.HasRaceSwap
     THE_SPEAR_OF_ADUN = 55, "The Spear of Adun (Protoss)", SC2Campaign.LOTV, "Aiur", SC2Race.PROTOSS, MissionPools.EASY, "ap_the_spear_of_adun", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.VsPZ|MissionFlag.HasRaceSwap
     SKY_SHIELD = 56, "Sky Shield (Protoss)", SC2Campaign.LOTV, "Korhal", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_sky_shield", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.Countdown|MissionFlag.VsTerran|MissionFlag.AiTerranAlly|MissionFlag.HasRaceSwap
@@ -199,36 +200,36 @@ class SC2Mission(Enum):
     LAST_STAND = 59, "Last Stand (Protoss)", SC2Campaign.LOTV, "Shakuras", SC2Race.PROTOSS, MissionPools.HARD, "ap_last_stand", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
     FORBIDDEN_WEAPON = 60, "Forbidden Weapon (Protoss)", SC2Campaign.LOTV, "Purifier", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_forbidden_weapon", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
     TEMPLE_OF_UNIFICATION = 61, "Temple of Unification (Protoss)", SC2Campaign.LOTV, "Ulnar", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_temple_of_unification", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.VsTP|MissionFlag.HasRaceSwap
-    THE_INFINITE_CYCLE = 62, "The Infinite Cycle", SC2Campaign.LOTV, "Ulnar", SC2Race.ANY, MissionPools.HARD, "ap_the_infinite_cycle", MissionFlag.Protoss|MissionFlag.Kerrigan|MissionFlag.NoBuild|MissionFlag.VsTP
+    THE_INFINITE_CYCLE = 62, "The Infinite Cycle", SC2Campaign.LOTV, "Ulnar", SC2Race.ANY, MissionPools.HARD, "ap_the_infinite_cycle", MissionFlag.Protoss|MissionFlag.Kerrigan|MissionFlag.NoBuild|MissionFlag.VsTP|MissionFlag.HeroSystemUnsupported
     HARBINGER_OF_OBLIVION = 63, "Harbinger of Oblivion (Protoss)", SC2Campaign.LOTV, "Ulnar", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_harbinger_of_oblivion", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.Countdown|MissionFlag.VsTP|MissionFlag.AiZergAlly|MissionFlag.HasRaceSwap
     UNSEALING_THE_PAST = 64, "Unsealing the Past (Protoss)", SC2Campaign.LOTV, "Purifier", SC2Race.PROTOSS, MissionPools.HARD, "ap_unsealing_the_past", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.AutoScroller|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
     PURIFICATION = 65, "Purification (Protoss)", SC2Campaign.LOTV, "Purifier", SC2Race.PROTOSS, MissionPools.HARD, "ap_purification", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
     STEPS_OF_THE_RITE = 66, "Steps of the Rite (Protoss)", SC2Campaign.LOTV, "Tal'darim", SC2Race.PROTOSS, MissionPools.HARD, "ap_steps_of_the_rite", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
     RAK_SHIR = 67, "Rak'Shir (Protoss)", SC2Campaign.LOTV, "Tal'darim", SC2Race.PROTOSS, MissionPools.HARD, "ap_rak_shir", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
     TEMPLAR_S_CHARGE = 68, "Templar's Charge (Protoss)", SC2Campaign.LOTV, "Moebius", SC2Race.PROTOSS, MissionPools.HARD, "ap_templar_s_charge", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
-    TEMPLAR_S_RETURN = 69, "Templar's Return", SC2Campaign.LOTV, "Return to Aiur", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_templar_s_return", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsPZ
+    TEMPLAR_S_RETURN = 69, "Templar's Return", SC2Campaign.LOTV, "Return to Aiur", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_templar_s_return", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsPZ|MissionFlag.HeroSystemUnsupported
     THE_HOST = 70, "The Host (Protoss)", SC2Campaign.LOTV, "Return to Aiur", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_the_host", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.VsAll|MissionFlag.HasRaceSwap
     SALVATION = 71, "Salvation (Protoss)", SC2Campaign.LOTV, "Return to Aiur", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_salvation", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.TimedDefense|MissionFlag.VsPZ|MissionFlag.AiProtossAlly|MissionFlag.HasRaceSwap
 
     # Epilogue
-    INTO_THE_VOID = 72, "Into the Void (Protoss)", SC2Campaign.EPILOGUE, "_1", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_into_the_void", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiZergAlly|MissionFlag.HasRaceSwap
-    THE_ESSENCE_OF_ETERNITY = 73, "The Essence of Eternity (Terran)", SC2Campaign.EPILOGUE, "_2", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_the_essence_of_eternity", MissionFlag.Terran|MissionFlag.TimedDefense|MissionFlag.VsAll|MissionFlag.AiZergAlly|MissionFlag.AiProtossAlly|MissionFlag.HasRaceSwap
-    AMON_S_FALL = 74, "Amon's Fall (Zerg)", SC2Campaign.EPILOGUE, "_3", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_amon_s_fall", MissionFlag.Zerg|MissionFlag.AutoScroller|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiProtossAlly|MissionFlag.HasRaceSwap
+    INTO_THE_VOID = 72, "Into the Void (Protoss)", SC2Campaign.EPILOGUE, "_1", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_into_the_void", MissionFlag.Protoss|MissionFlag.VanillaSoa|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiZergAlly|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
+    THE_ESSENCE_OF_ETERNITY = 73, "The Essence of Eternity (Terran)", SC2Campaign.EPILOGUE, "_2", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_the_essence_of_eternity", MissionFlag.Terran|MissionFlag.TimedDefense|MissionFlag.VsAll|MissionFlag.AiZergAlly|MissionFlag.AiProtossAlly|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
+    AMON_S_FALL = 74, "Amon's Fall (Zerg)", SC2Campaign.EPILOGUE, "_3", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_amon_s_fall", MissionFlag.Zerg|MissionFlag.AutoScroller|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiProtossAlly|MissionFlag.HasRaceSwap|MissionFlag.HeroSystemUnsupported
 
     # Nova Covert Ops
-    THE_ESCAPE = 75, "The Escape", SC2Campaign.NCO, "_1", SC2Race.ANY, MissionPools.MEDIUM, "ap_the_escape", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.NoBuild|MissionFlag.VsTerran
+    THE_ESCAPE = 75, "The Escape", SC2Campaign.NCO, "_1", SC2Race.ANY, MissionPools.MEDIUM, "ap_the_escape", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.HeroSystemUnsupported
     SUDDEN_STRIKE = 76, "Sudden Strike (Terran)", SC2Campaign.NCO, "_1", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_sudden_strike", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
     ENEMY_INTELLIGENCE = 77, "Enemy Intelligence (Terran)", SC2Campaign.NCO, "_1", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_enemy_intelligence", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.Defense|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
     TROUBLE_IN_PARADISE = 78, "Trouble In Paradise (Terran)", SC2Campaign.NCO, "_2", SC2Race.TERRAN, MissionPools.HARD, "ap_trouble_in_paradise", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.Countdown|MissionFlag.VsPZ|MissionFlag.HasRaceSwap
     NIGHT_TERRORS = 79, "Night Terrors (Terran)", SC2Campaign.NCO, "_2", SC2Race.TERRAN, MissionPools.HARD, "ap_night_terrors", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.VsPZ|MissionFlag.HasRaceSwap
     FLASHPOINT = 80, "Flashpoint (Terran)", SC2Campaign.NCO, "_2", SC2Race.TERRAN, MissionPools.HARD, "ap_flashpoint", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.VsZerg|MissionFlag.HasRaceSwap
-    IN_THE_ENEMY_S_SHADOW = 81, "In the Enemy's Shadow", SC2Campaign.NCO, "_3", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_in_the_enemy_s_shadow", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.NoBuild|MissionFlag.VsTerran
+    IN_THE_ENEMY_S_SHADOW = 81, "In the Enemy's Shadow", SC2Campaign.NCO, "_3", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_in_the_enemy_s_shadow", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.HeroSystemUnsupported
     DARK_SKIES = 82, "Dark Skies (Terran)", SC2Campaign.NCO, "_3", SC2Race.TERRAN, MissionPools.HARD, "ap_dark_skies", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.TimedDefense|MissionFlag.VsProtoss|MissionFlag.HasRaceSwap
     END_GAME = 83, "End Game (Terran)", SC2Campaign.NCO, "_3", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_end_game", MissionFlag.Terran|MissionFlag.Nova|MissionFlag.Defense|MissionFlag.VsTerran|MissionFlag.HasRaceSwap
 
-    # Race-Swapped Variants
-    LIBERATION_DAY_Z = 84, "Liberation Day (Zerg)", SC2Campaign.WOL, "Mar Sara", SC2Race.ZERG, MissionPools.STARTER, "ap_liberation_day", MissionFlag.Zerg|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.RaceSwap
-    LIBERATION_DAY_P = 85, "Liberation Day (Protoss)", SC2Campaign.WOL, "Mar Sara", SC2Race.PROTOSS, MissionPools.STARTER, "ap_liberation_day", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.RaceSwap
+    # Wings of Liberty (Race-Swapped)
+    LIBERATION_DAY_Z = 84, "Liberation Day (Zerg)", SC2Campaign.WOL, "Mar Sara", SC2Race.ZERG, MissionPools.STARTER, "ap_liberation_day", MissionFlag.Zerg|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    LIBERATION_DAY_P = 85, "Liberation Day (Protoss)", SC2Campaign.WOL, "Mar Sara", SC2Race.PROTOSS, MissionPools.STARTER, "ap_liberation_day", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
     THE_OUTLAWS_Z = 86, "The Outlaws (Zerg)", SC2Campaign.WOL, "Mar Sara", SC2Race.ZERG, MissionPools.EASY, "ap_the_outlaws", MissionFlag.Zerg|MissionFlag.VsTerran|MissionFlag.RaceSwap
     THE_OUTLAWS_P = 87, "The Outlaws (Protoss)", SC2Campaign.WOL, "Mar Sara", SC2Race.PROTOSS, MissionPools.EASY, "ap_the_outlaws", MissionFlag.Protoss|MissionFlag.VsTerran|MissionFlag.RaceSwap
     ZERO_HOUR_Z = 88, "Zero Hour (Zerg)", SC2Campaign.WOL, "Mar Sara", SC2Race.ZERG, MissionPools.MEDIUM, "ap_zero_hour", MissionFlag.Zerg|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap
@@ -255,8 +256,8 @@ class SC2Mission(Enum):
     DEVILS_PLAYGROUND_P = 109, "Devil's Playground (Protoss)", SC2Campaign.WOL, "Covert", SC2Race.PROTOSS, MissionPools.STARTER, "ap_devils_playground", MissionFlag.Protoss|MissionFlag.VsZerg|MissionFlag.RaceSwap
     WELCOME_TO_THE_JUNGLE_Z = 110, "Welcome to the Jungle (Zerg)", SC2Campaign.WOL, "Covert", SC2Race.ZERG, MissionPools.HARD, "ap_welcome_to_the_jungle", MissionFlag.Zerg|MissionFlag.VsProtoss|MissionFlag.RaceSwap
     WELCOME_TO_THE_JUNGLE_P = 111, "Welcome to the Jungle (Protoss)", SC2Campaign.WOL, "Covert", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_welcome_to_the_jungle", MissionFlag.Protoss|MissionFlag.VsProtoss|MissionFlag.RaceSwap
-    BREAKOUT_Z = 112, "Breakout (Zerg)", SC2Campaign.WOL, "Covert", SC2Race.ZERG, MissionPools.STARTER, "ap_breakout", MissionFlag.Zerg|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.RaceSwap
-    BREAKOUT_P = 113, "Breakout (Protoss)", SC2Campaign.WOL, "Covert", SC2Race.PROTOSS, MissionPools.STARTER, "ap_breakout", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.RaceSwap
+    BREAKOUT_Z = 112, "Breakout (Zerg)", SC2Campaign.WOL, "Covert", SC2Race.ZERG, MissionPools.STARTER, "ap_breakout", MissionFlag.Zerg|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    BREAKOUT_P = 113, "Breakout (Protoss)", SC2Campaign.WOL, "Covert", SC2Race.PROTOSS, MissionPools.STARTER, "ap_breakout", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsTerran|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
     # 114/115 - Ghost of a Chance
     THE_GREAT_TRAIN_ROBBERY_Z = 116, "The Great Train Robbery (Zerg)", SC2Campaign.WOL, "Rebellion", SC2Race.ZERG, MissionPools.EASY, "ap_the_great_train_robbery", MissionFlag.Zerg|MissionFlag.AutoScroller|MissionFlag.VsTerran|MissionFlag.RaceSwap
     THE_GREAT_TRAIN_ROBBERY_P = 117, "The Great Train Robbery (Protoss)", SC2Campaign.WOL, "Rebellion", SC2Race.PROTOSS, MissionPools.EASY, "ap_the_great_train_robbery", MissionFlag.Protoss|MissionFlag.AutoScroller|MissionFlag.VsTerran|MissionFlag.RaceSwap
@@ -268,12 +269,16 @@ class SC2Mission(Enum):
     MEDIA_BLITZ_P = 123, "Media Blitz (Protoss)", SC2Campaign.WOL, "Rebellion", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_media_blitz", MissionFlag.Protoss|MissionFlag.VsTerran|MissionFlag.RaceSwap
     # 124/125 - Piercing the Shroud
     # 126/127 - Whispers of Doom
+
+    # Prophecy (Race-Swapped)
     A_SINISTER_TURN_T = 128, "A Sinister Turn (Terran)", SC2Campaign.PROPHECY, "_2", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_a_sinister_turn", MissionFlag.Terran|MissionFlag.VsProtoss|MissionFlag.RaceSwap
     A_SINISTER_TURN_Z = 129, "A Sinister Turn (Zerg)", SC2Campaign.PROPHECY, "_2", SC2Race.ZERG, MissionPools.MEDIUM, "ap_a_sinister_turn", MissionFlag.Zerg|MissionFlag.VsProtoss|MissionFlag.RaceSwap
-    ECHOES_OF_THE_FUTURE_T = 130, "Echoes of the Future (Terran)", SC2Campaign.PROPHECY, "_3", SC2Race.TERRAN, MissionPools.EASY, "ap_echoes_of_the_future", MissionFlag.Terran|MissionFlag.VsZerg|MissionFlag.RaceSwap
-    ECHOES_OF_THE_FUTURE_Z = 131, "Echoes of the Future (Zerg)", SC2Campaign.PROPHECY, "_3", SC2Race.ZERG, MissionPools.EASY, "ap_echoes_of_the_future", MissionFlag.Zerg|MissionFlag.VsZerg|MissionFlag.RaceSwap
+    ECHOES_OF_THE_FUTURE_T = 130, "Echoes of the Future (Terran)", SC2Campaign.PROPHECY, "_3", SC2Race.TERRAN, MissionPools.EASY, "ap_echoes_of_the_future", MissionFlag.Terran|MissionFlag.VsZerg|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    ECHOES_OF_THE_FUTURE_Z = 131, "Echoes of the Future (Zerg)", SC2Campaign.PROPHECY, "_3", SC2Race.ZERG, MissionPools.EASY, "ap_echoes_of_the_future", MissionFlag.Zerg|MissionFlag.VsZerg|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
     IN_UTTER_DARKNESS_T = 132, "In Utter Darkness (Terran)", SC2Campaign.PROPHECY, "_4", SC2Race.TERRAN, MissionPools.HARD, "ap_in_utter_darkness", MissionFlag.Terran|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap
     IN_UTTER_DARKNESS_Z = 133, "In Utter Darkness (Zerg)", SC2Campaign.PROPHECY, "_4", SC2Race.ZERG, MissionPools.HARD, "ap_in_utter_darkness", MissionFlag.Zerg|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap
+
+    # Wings of Liberty (Part 2) (Race-Swapped)
     GATES_OF_HELL_Z = 134, "Gates of Hell (Zerg)", SC2Campaign.WOL, "Char", SC2Race.ZERG, MissionPools.HARD, "ap_gates_of_hell", MissionFlag.Zerg|MissionFlag.VsZerg|MissionFlag.RaceSwap
     GATES_OF_HELL_P = 135, "Gates of Hell (Protoss)", SC2Campaign.WOL, "Char", SC2Race.PROTOSS, MissionPools.HARD, "ap_gates_of_hell", MissionFlag.Protoss|MissionFlag.VsZerg|MissionFlag.RaceSwap
     # 136/137 - Belly of the Beast
@@ -281,8 +286,10 @@ class SC2Mission(Enum):
     SHATTER_THE_SKY_P = 139, "Shatter the Sky (Protoss)", SC2Campaign.WOL, "Char", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_shatter_the_sky", MissionFlag.Protoss|MissionFlag.VsZerg|MissionFlag.RaceSwap
     ALL_IN_Z = 140, "All-In (Zerg)", SC2Campaign.WOL, "Char", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_all_in", MissionFlag.Zerg|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap
     ALL_IN_P = 141, "All-In (Protoss)", SC2Campaign.WOL, "Char", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_all_in", MissionFlag.Protoss|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap
-    LAB_RAT_T = 142, "Lab Rat (Terran)", SC2Campaign.HOTS, "Umoja", SC2Race.TERRAN, MissionPools.STARTER, "ap_lab_rat", MissionFlag.Terran|MissionFlag.VsTerran|MissionFlag.RaceSwap
-    LAB_RAT_P = 143, "Lab Rat (Protoss)", SC2Campaign.HOTS, "Umoja", SC2Race.PROTOSS, MissionPools.STARTER, "ap_lab_rat", MissionFlag.Protoss|MissionFlag.VsTerran|MissionFlag.RaceSwap
+
+    # Heart of the Swarm (Race-Swapped)
+    LAB_RAT_T = 142, "Lab Rat (Terran)", SC2Campaign.HOTS, "Umoja", SC2Race.TERRAN, MissionPools.STARTER, "ap_lab_rat", MissionFlag.Terran|MissionFlag.VsTerran|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    LAB_RAT_P = 143, "Lab Rat (Protoss)", SC2Campaign.HOTS, "Umoja", SC2Race.PROTOSS, MissionPools.STARTER, "ap_lab_rat", MissionFlag.Protoss|MissionFlag.VsTerran|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
     # 144/145 - Back in the Saddle
     RENDEZVOUS_T = 146, "Rendezvous (Terran)", SC2Campaign.HOTS, "Umoja", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_rendezvous", MissionFlag.Terran|MissionFlag.AutoScroller|MissionFlag.VsTerran|MissionFlag.RaceSwap
     RENDEZVOUS_P = 147, "Rendezvous (Protoss)", SC2Campaign.HOTS, "Umoja", SC2Race.PROTOSS, MissionPools.EASY, "ap_rendezvous", MissionFlag.Protoss|MissionFlag.AutoScroller|MissionFlag.VsTerran|MissionFlag.RaceSwap
@@ -290,8 +297,8 @@ class SC2Mission(Enum):
     HARVEST_OF_SCREAMS_P = 149, "Harvest of Screams (Protoss)", SC2Campaign.HOTS, "Kaldir", SC2Race.PROTOSS, MissionPools.EASY, "ap_harvest_of_screams", MissionFlag.Protoss|MissionFlag.VsProtoss|MissionFlag.RaceSwap
     SHOOT_THE_MESSENGER_T = 150, "Shoot the Messenger (Terran)", SC2Campaign.HOTS, "Kaldir", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_shoot_the_messenger", MissionFlag.Terran|MissionFlag.TimedDefense|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.RaceSwap
     SHOOT_THE_MESSENGER_P = 151, "Shoot the Messenger (Protoss)", SC2Campaign.HOTS, "Kaldir", SC2Race.PROTOSS, MissionPools.EASY, "ap_shoot_the_messenger", MissionFlag.Protoss|MissionFlag.TimedDefense|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.RaceSwap
-    ENEMY_WITHIN_T = 152, "Enemy Within (Terran)", SC2Campaign.HOTS, "Kaldir", SC2Race.TERRAN, MissionPools.EASY, "ap_enemy_within", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsProtoss|MissionFlag.RaceSwap
-    ENEMY_WITHIN_P = 153, "Enemy Within (Protoss)", SC2Campaign.HOTS, "Kaldir", SC2Race.PROTOSS, MissionPools.EASY, "ap_enemy_within", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsProtoss|MissionFlag.RaceSwap
+    ENEMY_WITHIN_T = 152, "Enemy Within (Terran)", SC2Campaign.HOTS, "Kaldir", SC2Race.TERRAN, MissionPools.EASY, "ap_enemy_within", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsProtoss|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    ENEMY_WITHIN_P = 153, "Enemy Within (Protoss)", SC2Campaign.HOTS, "Kaldir", SC2Race.PROTOSS, MissionPools.EASY, "ap_enemy_within", MissionFlag.Protoss|MissionFlag.NoBuild|MissionFlag.VsProtoss|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
     DOMINATION_T = 154, "Domination (Terran)", SC2Campaign.HOTS, "Char", SC2Race.TERRAN, MissionPools.EASY, "ap_domination", MissionFlag.Terran|MissionFlag.Countdown|MissionFlag.VsZerg|MissionFlag.RaceSwap
     DOMINATION_P = 155, "Domination (Protoss)", SC2Campaign.HOTS, "Char", SC2Race.PROTOSS, MissionPools.EASY, "ap_domination", MissionFlag.Protoss|MissionFlag.Countdown|MissionFlag.VsZerg|MissionFlag.RaceSwap
     FIRE_IN_THE_SKY_T = 156, "Fire in the Sky (Terran)", SC2Campaign.HOTS, "Char", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_fire_in_the_sky", MissionFlag.Terran|MissionFlag.Countdown|MissionFlag.VsTerran|MissionFlag.RaceSwap
@@ -300,15 +307,15 @@ class SC2Mission(Enum):
     OLD_SOLDIERS_P = 159, "Old Soldiers (Protoss)", SC2Campaign.HOTS, "Char", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_old_soldiers", MissionFlag.Protoss|MissionFlag.VsTerran|MissionFlag.RaceSwap
     WAKING_THE_ANCIENT_T = 160, "Waking the Ancient (Terran)", SC2Campaign.HOTS, "Zerus", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_waking_the_ancient", MissionFlag.Terran|MissionFlag.VsZerg|MissionFlag.RaceSwap
     WAKING_THE_ANCIENT_P = 161, "Waking the Ancient (Protoss)", SC2Campaign.HOTS, "Zerus", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_waking_the_ancient", MissionFlag.Protoss|MissionFlag.VsZerg|MissionFlag.RaceSwap
-    THE_CRUCIBLE_T = 162, "The Crucible (Terran)", SC2Campaign.HOTS, "Zerus", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_the_crucible", MissionFlag.Terran|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap
-    THE_CRUCIBLE_P = 163, "The Crucible (Protoss)", SC2Campaign.HOTS, "Zerus", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_the_crucible", MissionFlag.Protoss|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap
+    THE_CRUCIBLE_T = 162, "The Crucible (Terran)", SC2Campaign.HOTS, "Zerus", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_the_crucible", MissionFlag.Terran|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    THE_CRUCIBLE_P = 163, "The Crucible (Protoss)", SC2Campaign.HOTS, "Zerus", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_the_crucible", MissionFlag.Protoss|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
     # 164/165 - Supreme
     INFESTED_T = 166, "Infested (Terran)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_infested", MissionFlag.Terran|MissionFlag.VsTerran|MissionFlag.RaceSwap
     INFESTED_P = 167, "Infested (Protoss)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_infested", MissionFlag.Protoss|MissionFlag.VsTerran|MissionFlag.RaceSwap
     HAND_OF_DARKNESS_T = 168, "Hand of Darkness (Terran)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.TERRAN, MissionPools.HARD, "ap_hand_of_darkness", MissionFlag.Terran|MissionFlag.Countdown|MissionFlag.VsTerran|MissionFlag.RaceSwap
     HAND_OF_DARKNESS_P = 169, "Hand of Darkness (Protoss)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.PROTOSS, MissionPools.HARD, "ap_hand_of_darkness", MissionFlag.Protoss|MissionFlag.Countdown|MissionFlag.VsTerran|MissionFlag.RaceSwap
-    PHANTOMS_OF_THE_VOID_T = 170, "Phantoms of the Void (Terran)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_phantoms_of_the_void", MissionFlag.Terran|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.RaceSwap
-    PHANTOMS_OF_THE_VOID_P = 171, "Phantoms of the Void (Protoss)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_phantoms_of_the_void", MissionFlag.Protoss|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.RaceSwap
+    PHANTOMS_OF_THE_VOID_T = 170, "Phantoms of the Void (Terran)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_phantoms_of_the_void", MissionFlag.Terran|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    PHANTOMS_OF_THE_VOID_P = 171, "Phantoms of the Void (Protoss)", SC2Campaign.HOTS, "Skygeirr Station", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_phantoms_of_the_void", MissionFlag.Protoss|MissionFlag.Countdown|MissionFlag.VsProtoss|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
     # 172/173 - With Friends Like These
     # 174/175 - Conviction
     PLANETFALL_T = 176, "Planetfall (Terran)", SC2Campaign.HOTS, "Korhal", SC2Race.TERRAN, MissionPools.HARD, "ap_planetfall", MissionFlag.Terran|MissionFlag.AutoScroller|MissionFlag.VsTerran|MissionFlag.RaceSwap
@@ -317,13 +324,17 @@ class SC2Mission(Enum):
     DEATH_FROM_ABOVE_P = 179, "Death From Above (Protoss)", SC2Campaign.HOTS, "Korhal", SC2Race.PROTOSS, MissionPools.HARD, "ap_death_from_above", MissionFlag.Protoss|MissionFlag.VsTerran|MissionFlag.RaceSwap
     THE_RECKONING_T = 180, "The Reckoning (Terran)", SC2Campaign.HOTS, "Korhal", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_the_reckoning", MissionFlag.Terran|MissionFlag.VsTerran|MissionFlag.AiTerranAlly|MissionFlag.RaceSwap
     THE_RECKONING_P = 181, "The Reckoning (Protoss)", SC2Campaign.HOTS, "Korhal", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_the_reckoning", MissionFlag.Protoss|MissionFlag.VsTerran|MissionFlag.AiTerranAlly|MissionFlag.RaceSwap
+
+    # Prologue (Race-Swapped)
     DARK_WHISPERS_T = 182, "Dark Whispers (Terran)", SC2Campaign.PROLOGUE, "_1", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_dark_whispers", MissionFlag.Terran|MissionFlag.Countdown|MissionFlag.VsTZ|MissionFlag.RaceSwap
     DARK_WHISPERS_Z = 183, "Dark Whispers (Zerg)", SC2Campaign.PROLOGUE, "_1", SC2Race.ZERG, MissionPools.MEDIUM, "ap_dark_whispers", MissionFlag.Zerg|MissionFlag.Countdown|MissionFlag.VsTZ|MissionFlag.RaceSwap
     GHOSTS_IN_THE_FOG_T = 184, "Ghosts in the Fog (Terran)", SC2Campaign.PROLOGUE, "_2", SC2Race.TERRAN, MissionPools.HARD, "ap_ghosts_in_the_fog", MissionFlag.Terran|MissionFlag.VsProtoss|MissionFlag.RaceSwap
     GHOSTS_IN_THE_FOG_Z = 185, "Ghosts in the Fog (Zerg)", SC2Campaign.PROLOGUE, "_2", SC2Race.ZERG, MissionPools.HARD, "ap_ghosts_in_the_fog", MissionFlag.Zerg|MissionFlag.VsProtoss|MissionFlag.RaceSwap
     # 186/187 - Evil Awoken
-    FOR_AIUR_T = 188, "For Aiur! (Terran)", SC2Campaign.LOTV, "Aiur", SC2Race.TERRAN, MissionPools.STARTER, "ap_for_aiur", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsZerg|MissionFlag.RaceSwap
-    FOR_AIUR_Z = 189, "For Aiur! (Zerg)", SC2Campaign.LOTV, "Aiur", SC2Race.ZERG, MissionPools.STARTER, "ap_for_aiur", MissionFlag.Zerg|MissionFlag.NoBuild|MissionFlag.VsZerg|MissionFlag.RaceSwap
+
+    # Legacy of the Void (Race-Swapped)
+    FOR_AIUR_T = 188, "For Aiur! (Terran)", SC2Campaign.LOTV, "Aiur", SC2Race.TERRAN, MissionPools.STARTER, "ap_for_aiur", MissionFlag.Terran|MissionFlag.NoBuild|MissionFlag.VsZerg|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    FOR_AIUR_Z = 189, "For Aiur! (Zerg)", SC2Campaign.LOTV, "Aiur", SC2Race.ZERG, MissionPools.STARTER, "ap_for_aiur", MissionFlag.Zerg|MissionFlag.NoBuild|MissionFlag.VsZerg|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
     THE_GROWING_SHADOW_T = 190, "The Growing Shadow (Terran)", SC2Campaign.LOTV, "Aiur", SC2Race.TERRAN, MissionPools.EASY, "ap_the_growing_shadow", MissionFlag.Terran|MissionFlag.VsPZ|MissionFlag.RaceSwap
     THE_GROWING_SHADOW_Z = 191, "The Growing Shadow (Zerg)", SC2Campaign.LOTV, "Aiur", SC2Race.ZERG, MissionPools.EASY, "ap_the_growing_shadow", MissionFlag.Zerg|MissionFlag.VsPZ|MissionFlag.RaceSwap
     THE_SPEAR_OF_ADUN_T = 192, "The Spear of Adun (Terran)", SC2Campaign.LOTV, "Aiur", SC2Race.TERRAN, MissionPools.MEDIUM, "ap_the_spear_of_adun", MissionFlag.Terran|MissionFlag.VsPZ|MissionFlag.RaceSwap
@@ -358,12 +369,16 @@ class SC2Mission(Enum):
     THE_HOST_Z = 223, "The Host (Zerg)", SC2Campaign.LOTV, "Return to Aiur", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_the_host", MissionFlag.Zerg|MissionFlag.VsAll|MissionFlag.RaceSwap
     SALVATION_T = 224, "Salvation (Terran)", SC2Campaign.LOTV, "Return to Aiur", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_salvation", MissionFlag.Terran|MissionFlag.TimedDefense|MissionFlag.VsPZ|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap
     SALVATION_Z = 225, "Salvation (Zerg)", SC2Campaign.LOTV, "Return to Aiur", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_salvation", MissionFlag.Zerg|MissionFlag.TimedDefense|MissionFlag.VsPZ|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap
-    INTO_THE_VOID_T = 226, "Into the Void (Terran)", SC2Campaign.EPILOGUE, "_1", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_into_the_void", MissionFlag.Terran|MissionFlag.VsAll|MissionFlag.AiZergAlly|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap   
-    INTO_THE_VOID_Z = 227, "Into the Void (Zerg)", SC2Campaign.EPILOGUE, "_1", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_into_the_void", MissionFlag.Zerg|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap
-    THE_ESSENCE_OF_ETERNITY_Z = 228, "The Essence of Eternity (Zerg)", SC2Campaign.EPILOGUE, "_2", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_the_essence_of_eternity", MissionFlag.Zerg|MissionFlag.TimedDefense|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap
-    THE_ESSENCE_OF_ETERNITY_P = 229, "The Essence of Eternity (Protoss)", SC2Campaign.EPILOGUE, "_2", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_the_essence_of_eternity", MissionFlag.Protoss|MissionFlag.TimedDefense|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiZergAlly|MissionFlag.RaceSwap
-    AMON_S_FALL_T = 230, "Amon's Fall (Terran)", SC2Campaign.EPILOGUE, "_3", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_amon_s_fall", MissionFlag.Terran|MissionFlag.AutoScroller|MissionFlag.VsAll|MissionFlag.AiZergAlly|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap
-    AMON_S_FALL_P = 231, "Amon's Fall (Protoss)", SC2Campaign.EPILOGUE, "_3", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_amon_s_fall", MissionFlag.Protoss|MissionFlag.AutoScroller|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiZergAlly|MissionFlag.RaceSwap
+    
+    # Epilogue (Race-Swapped)
+    INTO_THE_VOID_T = 226, "Into the Void (Terran)", SC2Campaign.EPILOGUE, "_1", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_into_the_void", MissionFlag.Terran|MissionFlag.VsAll|MissionFlag.AiZergAlly|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported 
+    INTO_THE_VOID_Z = 227, "Into the Void (Zerg)", SC2Campaign.EPILOGUE, "_1", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_into_the_void", MissionFlag.Zerg|MissionFlag.Kerrigan|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    THE_ESSENCE_OF_ETERNITY_Z = 228, "The Essence of Eternity (Zerg)", SC2Campaign.EPILOGUE, "_2", SC2Race.ZERG, MissionPools.VERY_HARD, "ap_the_essence_of_eternity", MissionFlag.Zerg|MissionFlag.TimedDefense|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    THE_ESSENCE_OF_ETERNITY_P = 229, "The Essence of Eternity (Protoss)", SC2Campaign.EPILOGUE, "_2", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_the_essence_of_eternity", MissionFlag.Protoss|MissionFlag.TimedDefense|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiZergAlly|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    AMON_S_FALL_T = 230, "Amon's Fall (Terran)", SC2Campaign.EPILOGUE, "_3", SC2Race.TERRAN, MissionPools.VERY_HARD, "ap_amon_s_fall", MissionFlag.Terran|MissionFlag.AutoScroller|MissionFlag.VsAll|MissionFlag.AiZergAlly|MissionFlag.AiProtossAlly|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    AMON_S_FALL_P = 231, "Amon's Fall (Protoss)", SC2Campaign.EPILOGUE, "_3", SC2Race.PROTOSS, MissionPools.VERY_HARD, "ap_amon_s_fall", MissionFlag.Protoss|MissionFlag.AutoScroller|MissionFlag.VsAll|MissionFlag.AiTerranAlly|MissionFlag.AiZergAlly|MissionFlag.RaceSwap|MissionFlag.HeroSystemUnsupported
+    
+    # Nova Covert Ops (Race-Swapped)
     # 232/233 - The Escape
     SUDDEN_STRIKE_Z = 234, "Sudden Strike (Zerg)", SC2Campaign.NCO, "_1", SC2Race.ZERG, MissionPools.MEDIUM, "ap_sudden_strike", MissionFlag.Zerg|MissionFlag.Nova|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap
     SUDDEN_STRIKE_P = 235, "Sudden Strike (Protoss)", SC2Campaign.NCO, "_1", SC2Race.PROTOSS, MissionPools.MEDIUM, "ap_sudden_strike", MissionFlag.Protoss|MissionFlag.Nova|MissionFlag.TimedDefense|MissionFlag.VsZerg|MissionFlag.RaceSwap
@@ -411,6 +426,7 @@ lookup_id_to_mission: dict[int, SC2Mission] = {
     mission.id: mission for mission in SC2Mission
 }
 
+
 lookup_name_to_mission: dict[str, SC2Mission] = {
     mission.mission_name: mission for mission in SC2Mission
 }
@@ -422,6 +438,10 @@ for mission in SC2Mission:
 
 lookup_id_to_campaign: dict[int, SC2Campaign] = {
     campaign.id: campaign for campaign in SC2Campaign
+}
+
+lookup_id_to_race: dict[int, SC2Race] = {
+    race.value: race for race in SC2Race
 }
 
 

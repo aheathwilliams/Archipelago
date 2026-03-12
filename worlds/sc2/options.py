@@ -18,7 +18,7 @@ from .mission_tables import (
 )
 from .mission_groups import mission_groups, MissionGroupNames
 from .mission_order.options import CustomMissionOrder
-from .tables import NovaPresenceOptions
+from .tables import HeroOptions
 
 if TYPE_CHECKING:
     from worlds.AutoWorld import World
@@ -102,20 +102,6 @@ class GameSpeed(Choice):
     option_fast = 4
     option_faster = 5
     default = option_default
-
-
-class DisableForcedCamera(DefaultOnToggle):
-    """
-    Prevents the game from moving or locking the camera without the player's consent.
-    """
-    display_name = "Disable Forced Camera Movement"
-
-
-class SkipCutscenes(Toggle):
-    """
-    Skips all cutscenes and prevents dialog from blocking progress.
-    """
-    display_name = "Skip Cutscenes"
 
 
 class AllInMap(Choice):
@@ -552,23 +538,6 @@ class MercenaryHighlanders(DefaultOnToggle):
     display_name = "Mercenary Highlanders"
 
 
-class KerriganPresence(Choice):
-    """
-    Determines whether Kerrigan is playable outside of missions that require her.
-
-    Vanilla: Kerrigan is playable as normal, appears in the same missions as in vanilla game.
-    Not Present:  Kerrigan is not playable, unless the mission requires her to be present.  Other hero units stay playable,
-        and locations normally requiring Kerrigan can be checked by any unit.
-        Kerrigan level items, active abilities and passive abilities affecting her will not appear.
-        In missions where the Kerrigan unit is required, story abilities are given in same way as Grant Story Tech is set to true
-
-    Note: Always set to "Not Present" if Heart of the Swarm campaign is disabled.
-    """
-    display_name = "Kerrigan Presence"
-    option_vanilla = 0
-    option_not_present = 1
-
-
 class KerriganLevelsPerMissionCompleted(Range):
     """
     Determines how many levels Kerrigan gains when a mission is beaten.
@@ -715,7 +684,7 @@ class KerriganMaxPassiveAbilities(Range):
     default = range_end
 
 
-class EnableMorphling(Toggle):
+class EnableMorphling(DefaultOnToggle):
     """
     Determines whether the player can build Morphlings, which allow for inefficient morphing of advanced units
     like Ravagers and Lurkers without requiring the base unit to be unlocked first.
@@ -857,7 +826,7 @@ class GrantStoryTech(Choice):
 
 class GrantStoryLevels(Choice):
     """
-    If enabled, grants Kerrigan the required minimum levels for the following missions:
+    If enabled, grants Kerrigan the required minimum levels for the following missions for Supreme and Infinite Cycle.
     Supreme: 35
     The Infinite Cycle: 70
     The bonus levels only apply during the listed missions, and can exceed the Total Level Cap.
@@ -879,27 +848,48 @@ class GrantStoryLevels(Choice):
     option_minimum = 2
     default = option_minimum
 
-class NovaPresence(OptionSet):
+class EnabledHeroes(OptionSet):
     """
-    Determines which missions will use the NCO Nova hero
-    
-    Nova Covert Ops (Terran): Nova is present in vanilla NCO missions.
-    Nova Covert Ops (Zerg): Nova is present in Zerg NCO missions.
-    Nova Covert Ops (Protoss): Nova is present in Protoss NCO missions.
-    Ghost of a Chance: Vanilla WoL Nova is replaced with NCO Nova.
-    Ghost of a Chance (Auto): NCO Nova is used only if Nova is enabled in any build missions 
+    Determines the Heroes used in missions
 
-    Not including any of the options will disable Nova for those missions.
+    Kerrigan: Enable using Kerrigan from the HotS campaign
+    Nova: Enable using Nova from the NCO campaign
+    Artanis: Enable using Artanis, a custom Protoss Hero
+
+    Use in combination wih the "Hero Presence" option
+    to determine, which hero will show up in which mission
     """
-    display_name = "Nova Presence"
+    display_name = "Enable Heroes"
     valid_keys = {
-        NovaPresenceOptions.NCO_TERRAN,
-        NovaPresenceOptions.NCO_ZERG,
-        NovaPresenceOptions.NCO_PROTOSS,
-        NovaPresenceOptions.GHOST_OF_A_CHANCE,
-        NovaPresenceOptions.GHOST_OF_A_CHANCE_AUTO,
+        HeroOptions.KERRIGAN,
+        HeroOptions.NOVA,
+        HeroOptions.ARTANIS,
     }
-    default = frozenset((NovaPresenceOptions.NCO_TERRAN,))
+    default = frozenset((
+        HeroOptions.KERRIGAN,
+        HeroOptions.NOVA,
+    ))
+
+class HeroPresence(Choice):
+    """
+    Determines, which missions use which of the enabled Heroes
+
+    Vanilla: Kerrigan in HotS Zerg, Nova in NCO Terran, no Hero anywhere else
+    Vanilla Raceswap: Only HotS and NCO Missions have Heroes, matching their Race. Kerrigan in HotS Zerg and NCO Zerg
+    Vanilla Original Race: HotS has Kerrigan for all races, NCO has Nova for all races, no Hero anywhere else
+    Same Race: Kerrigan in every Zerg Mission, Nova in every Terran Mission, Artanis in every Protoss Mission
+    Original Race: Kerrigan in every HotS Mission, Nova in every WoL and NCO Mission, Artanis in every LotV Mission
+    Anywhere: Every enabled Hero in all Missions
+    """
+    display_name = "Hero Presence"
+    option_vanilla = 1
+    option_vanilla_raceswap = 2
+    option_vanilla_original_race= 3
+    option_same_race = 4
+    option_original_race = 5
+    option_anywhere = 6
+    default = option_vanilla
+
 
 class NovaMaxWeapons(Range):
     """
@@ -1382,8 +1372,6 @@ class Starcraft2Options(PerGameCommonOptions):
     game_difficulty: GameDifficulty
     difficulty_damage_modifier: DifficultyDamageModifier
     game_speed: GameSpeed
-    disable_forced_camera: DisableForcedCamera
-    skip_cutscenes: SkipCutscenes
     all_in_map: AllInMap
     mission_order: MissionOrder
     maximum_campaign_size: MaximumCampaignSize
@@ -1414,7 +1402,6 @@ class Starcraft2Options(PerGameCommonOptions):
     generic_upgrade_research: GenericUpgradeResearch
     generic_upgrade_research_speedup: GenericUpgradeResearchSpeedup
     generic_upgrade_items: GenericUpgradeItems
-    kerrigan_presence: KerriganPresence
     kerrigan_levels_per_mission_completed: KerriganLevelsPerMissionCompleted
     kerrigan_levels_per_mission_completed_cap: KerriganLevelsPerMissionCompletedCap
     kerrigan_level_item_sum: KerriganLevelItemSum
@@ -1434,9 +1421,10 @@ class Starcraft2Options(PerGameCommonOptions):
     spear_of_adun_max_passive_abilities: SpearOfAdunMaxAutocastAbilities
     grant_story_tech: GrantStoryTech
     grant_story_levels: GrantStoryLevels
-    nova_presence: NovaPresence
     nova_max_weapons: NovaMaxWeapons
     nova_max_gadgets: NovaMaxGadgets
+    enabled_heroes: EnabledHeroes
+    hero_presence: HeroPresence
     take_over_ai_allies: TakeOverAIAllies
     locked_items: LockedItems
     excluded_items: ExcludedItems
@@ -1507,7 +1495,6 @@ option_groups = [
         GenericUpgradeItems,
     ]),
     OptionGroup("Kerrigan", [
-        KerriganPresence,
         GrantStoryLevels,
         KerriganLevelsPerMissionCompleted,
         KerriganLevelsPerMissionCompletedCap,
@@ -1528,7 +1515,6 @@ option_groups = [
         SpearOfAdunMaxAutocastAbilities,
     ]),
     OptionGroup("Nova", [
-        NovaPresence,
         NovaMaxWeapons,
         NovaMaxGadgets,
     ]),
@@ -1723,10 +1709,6 @@ dynamic_mission_orders = [
 ]
 
 LEGACY_GRID_ORDERS = {3, 4, 8}  # Medium Grid, Mini Grid, and Tiny Grid respectively
-
-kerrigan_unit_available = [
-    KerriganPresence.option_vanilla,
-]
 
 # Names of upgrades to be included for different options
 upgrade_included_names: dict[int, set[str]] = {

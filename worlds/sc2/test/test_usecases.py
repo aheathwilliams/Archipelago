@@ -8,13 +8,12 @@ from ..item import item_groups, item_tables, item_names
 from ..mission_tables import SC2Race, SC2Mission, SC2Campaign, MissionFlag
 from ..options import (
     EnabledCampaigns, MasteryLocations, MissionOrder, EnableRaceSwapVariants, ShuffleCampaigns,
-    ShuffleNoBuild, StarterUnit, RequiredTactics, KerriganPresence, KerriganLevelItemDistribution, GrantStoryTech,
+    ShuffleNoBuild, StarterUnit, RequiredTactics, KerriganLevelItemDistribution, GrantStoryTech,
     GrantStoryLevels, BasebustLocations, ChallengeLocations, DifficultyCurve, EnableMorphling, ExcludeOverpoweredItems,
     ExcludeVeryHardMissions, ExtraLocations, GenericUpgradeItems, GenericUpgradeResearch, GenericUpgradeResearchSpeedup,
     KerriganPrimalStatus, KeyMode, MissionOrderScouting, EnableMissionRaceBalancing,
     PreventativeLocations, SpeedrunLocations, TakeOverAIAllies, VanillaItemsOnly
 )
-from ..tables import NovaPresenceOptions
 
 
 class TestSupportedUseCases(Sc2SetupTestBase):
@@ -546,7 +545,6 @@ class TestSupportedUseCases(Sc2SetupTestBase):
             'kerrigan_levels_per_mission_completed_cap': -1,
             'kerrigan_max_active_abilities': 12,
             'kerrigan_max_passive_abilities': 5,
-            'kerrigan_presence': KerriganPresence.option_vanilla,
             'kerrigan_primal_status': KerriganPrimalStatus.option_vanilla,
             'kerrigan_total_level_cap': -1,
             'key_mode': KeyMode.option_progressive_questlines,
@@ -558,7 +556,6 @@ class TestSupportedUseCases(Sc2SetupTestBase):
             'mission_order': MissionOrder.option_mini_campaign,
             'mission_order_scouting': MissionOrderScouting.option_none,
             'mission_race_balancing': EnableMissionRaceBalancing.option_semi_balanced,
-            'nova_presence': {NovaPresenceOptions.NCO_TERRAN},
             'preventative_locations': PreventativeLocations.option_enabled,
             'required_tactics': RequiredTactics.option_standard,
             'shuffle_campaigns': ShuffleCampaigns.option_true,
@@ -604,7 +601,6 @@ class TestSupportedUseCases(Sc2SetupTestBase):
             'shuffle_no_build': ShuffleNoBuild.option_true,
             'starter_unit': StarterUnit.option_balanced,
             'required_tactics': RequiredTactics.option_standard,
-            'kerrigan_presence': KerriganPresence.option_vanilla,
             'kerrigan_levels_per_mission_completed': 0,
             'kerrigan_levels_per_mission_completed_cap': -1,
             'kerrigan_level_item_sum': 87,

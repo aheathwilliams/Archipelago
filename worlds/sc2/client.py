@@ -17,33 +17,37 @@ import random
 import concurrent.futures
 import time
 import uuid
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, TYPE_CHECKING, NamedTuple, Type, Sequence, Iterable
 
 # CommonClient import first to trigger ModuleUpdater
 from CommonClient import CommonContext, server_loop, ClientCommandProcessor, gui_enabled, get_base_parser, handle_url_arg
 from Utils import init_logging, async_start
+import Options as coreoptions
 from .item import item_parents
 from .item.item_annotations import ITEM_NAME_ANNOTATIONS
 from .item.item_groups import item_name_groups, unlisted_item_name_groups
 from . import options
 from .options import (
-    MissionOrder, KerriganPrimalStatus, KerriganPresence, EnableMorphling, GameDifficulty,
+    MissionOrder, KerriganPrimalStatus, EnableMorphling, GameDifficulty,
     GameSpeed, GenericUpgradeItems, GenericUpgradeResearch, ColorChoice, GenericUpgradeMissions, MaxUpgradeLevel,
     LocationInclusion, ExtraLocations, MasteryLocations, SpeedrunLocations, PreventativeLocations, ChallengeLocations,
-    VanillaLocations, NovaPresence,
-    DisableForcedCamera, SkipCutscenes, GrantStoryTech, GrantStoryLevels, TakeOverAIAllies, RequiredTactics,
+    VanillaLocations, EnabledHeroes, HeroPresence,
+    GrantStoryTech, GrantStoryLevels, TakeOverAIAllies, RequiredTactics,
     SpearOfAdunPresence, SpearOfAdunPresentInNoBuild, SpearOfAdunPassiveAbilityPresence,
     SpearOfAdunPassivesPresentInNoBuild, EnableVoidTrade, VoidTradeAgeLimit, void_trade_age_limits_ms, VoidTradeWorkers,
     DifficultyDamageModifier, MissionOrderScouting, GenericUpgradeResearchSpeedup, MercenaryHighlanders, WarCouncilNerfs,
 )
 from .mission_order.slot_data import CampaignSlotData, LayoutSlotData, MissionSlotData, MissionOrderObjectSlotData
 from .mission_order.entry_rules import SubRuleRuleData, CountMissionsRuleData, MissionEntryRules
-from .tables import NovaPresenceOptions
+from .tables import HeroOptions, HeroFlag
 from .apclient.transfer_data import worker_units
 from . import SC2World
 from .apclient import banks, user_paths, game_client
 from .apclient.failable import Error
+import settings as coresettings
+from .settings import Starcraft2Settings
 
 import nest_asyncio
 from .item import item_tables
@@ -52,16 +56,14 @@ from .locations import (
 )
 from .mission_tables import (
     lookup_id_to_mission, SC2Campaign, MissionInfo,
-    lookup_id_to_campaign, SC2Mission, campaign_mission_table, SC2Race
+    lookup_id_to_campaign, SC2Mission, campaign_mission_table, 
+    lookup_id_to_race, SC2Race,
 )
 import colorama
 from NetUtils import (
     NetworkItem, JSONtoTextParser, JSONMessagePart, add_json_item, add_json_location, add_json_text, JSONTypes
 )
 from MultiServer import mark_raw
-
-if TYPE_CHECKING:
-    from Options import Option
 
 
 sc2_logger = logging.getLogger("Starcraft2")
@@ -106,14 +108,20 @@ def _remap_color_option(slot_data_version: int, color: int) -> int:
 class ConfigurableOptionType(enum.Enum):
     INTEGER = enum.auto()
     ENUM = enum.auto()
+    SETTING = enum.auto()
 
 
 class ConfigurableOptionInfo(NamedTuple):
-    name: str
     variable_name: str
-    option_class: Type[Option]
+    option_class: Type[coreoptions.Option]
     option_type: ConfigurableOptionType = ConfigurableOptionType.ENUM
     can_break_logic: bool = False
+
+
+@dataclass
+class ConfigurableSettingInfo:
+    setting_name: str
+    option_class: Type[coresettings.Bool] | Type[str] | Type[int]
 
 
 class ColouredMessage:
@@ -150,6 +158,7 @@ class StarcraftClientProcessor(ClientCommandProcessor):
         # without having to branch code from CommonClient
         self.ctx.on_print_json({"data": [{"text": text, "keep_markup": True}]})
 
+    @mark_raw
     def _cmd_difficulty(self, difficulty: str = "") -> bool:
         """Overrides the current difficulty set for the world.  Takes the argument casual, normal, hard, or brutal"""
         arguments = difficulty.split()
@@ -183,6 +192,7 @@ class StarcraftClientProcessor(ClientCommandProcessor):
             self.output("To change the difficulty, add the name of the difficulty after the command.")
             return False
 
+    @mark_raw
     def _cmd_game_speed(self, game_speed: str = "") -> bool:
         """Overrides the current game speed for the world.
          Takes the arguments default, slower, slow, normal, fast, faster"""
@@ -361,88 +371,157 @@ class StarcraftClientProcessor(ClientCommandProcessor):
             ).send(self.ctx)
         return True
 
+    @mark_raw
     def _cmd_option(self, option_name: str = "", option_value: str = "") -> None:
         """Sets a Starcraft game option that can be changed after generation. Use "/option list" to see all options."""
 
+        # Manually parse arguments so the user doesn't see a stack trace if they provide too many arguments
+        arguments = parse_client_cmd_args(option_name, 2, "/option")
+        if isinstance(arguments, Error):
+            self.output(arguments.message)
+            return
+        option_name, option_value = arguments
+
         LOGIC_WARNING = "  *Note changing this may result in logically unbeatable games*\n"
 
-        configurable_options = (
-            ConfigurableOptionInfo('speed', 'game_speed', options.GameSpeed),
-            ConfigurableOptionInfo('kerrigan_presence', 'kerrigan_presence', options.KerriganPresence, can_break_logic=True),
-            ConfigurableOptionInfo('kerrigan_level_cap', 'kerrigan_total_level_cap', options.KerriganTotalLevelCap, ConfigurableOptionType.INTEGER, can_break_logic=True),
-            ConfigurableOptionInfo('kerrigan_mission_level_cap', 'kerrigan_levels_per_mission_completed_cap', options.KerriganLevelsPerMissionCompletedCap, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('kerrigan_levels_per_mission', 'kerrigan_levels_per_mission_completed', options.KerriganLevelsPerMissionCompleted, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('grant_story_levels', 'grant_story_levels', options.GrantStoryLevels, can_break_logic=True),
-            ConfigurableOptionInfo('grant_story_tech', 'grant_story_tech', options.GrantStoryTech, can_break_logic=True),
-            ConfigurableOptionInfo('control_ally', 'take_over_ai_allies', options.TakeOverAIAllies, can_break_logic=True),
-            ConfigurableOptionInfo('soa_presence', 'spear_of_adun_presence', options.SpearOfAdunPresence, can_break_logic=True),
-            ConfigurableOptionInfo('soa_in_nobuilds', 'spear_of_adun_present_in_no_build', options.SpearOfAdunPresentInNoBuild, can_break_logic=True),
-            # Note(mm): Technically SOA passive presence is in the logic for Amon's Fall if Takeover AI Allies is true,
-            # but that's edge case enough I don't think we should warn about it.
-            ConfigurableOptionInfo('soa_passive_presence', 'spear_of_adun_passive_ability_presence', options.SpearOfAdunPassiveAbilityPresence),
-            ConfigurableOptionInfo('soa_passives_in_nobuilds', 'spear_of_adun_passive_present_in_no_build', options.SpearOfAdunPassivesPresentInNoBuild),
-            ConfigurableOptionInfo('max_upgrade_level', 'max_upgrade_level', options.MaxUpgradeLevel, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('generic_upgrade_research', 'generic_upgrade_research', options.GenericUpgradeResearch),
-            ConfigurableOptionInfo('generic_upgrade_research_speedup', 'generic_upgrade_research_speedup', options.GenericUpgradeResearchSpeedup),
-            ConfigurableOptionInfo('minerals_per_item', 'minerals_per_item', options.MineralsPerItem, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('gas_per_item', 'vespene_per_item', options.VespenePerItem, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('supply_per_item', 'starting_supply_per_item', options.StartingSupplyPerItem, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('max_supply_per_item', 'maximum_supply_per_item', options.MaximumSupplyPerItem, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('reduced_supply_per_item', 'maximum_supply_reduction_per_item', options.MaximumSupplyReductionPerItem, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('lowest_max_supply', 'lowest_maximum_supply', options.LowestMaximumSupply, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('research_cost_per_item', 'research_cost_reduction_per_item', options.ResearchCostReductionPerItem, ConfigurableOptionType.INTEGER),
-            ConfigurableOptionInfo('no_forced_camera', 'disable_forced_camera', options.DisableForcedCamera),
-            ConfigurableOptionInfo('skip_cutscenes', 'skip_cutscenes', options.SkipCutscenes),
-            ConfigurableOptionInfo('enable_morphling', 'enable_morphling', options.EnableMorphling, can_break_logic=True),
-            ConfigurableOptionInfo('difficulty_damage_modifier', 'difficulty_damage_modifier', options.DifficultyDamageModifier),
-            ConfigurableOptionInfo('void_trade_age_limit', 'trade_age_limit', options.VoidTradeAgeLimit),
-            ConfigurableOptionInfo('void_trade_workers', 'trade_workers_allowed', options.VoidTradeWorkers),
-            ConfigurableOptionInfo('mercenary_highlanders', 'mercenary_highlanders', options.MercenaryHighlanders),
-        )
+        configurable_options: dict[str, ConfigurableOptionInfo | ConfigurableSettingInfo] = {
+            # Kerrigan
+            'kerrigan_level_cap': ConfigurableOptionInfo('kerrigan_total_level_cap', options.KerriganTotalLevelCap, ConfigurableOptionType.INTEGER, can_break_logic=True),
+            'kerrigan_mission_level_cap': ConfigurableOptionInfo('kerrigan_levels_per_mission_completed_cap', options.KerriganLevelsPerMissionCompletedCap, ConfigurableOptionType.INTEGER),
+            'kerrigan_levels_per_mission': ConfigurableOptionInfo('kerrigan_levels_per_mission_completed', options.KerriganLevelsPerMissionCompleted, ConfigurableOptionType.INTEGER),
+            'grant_story_levels': ConfigurableOptionInfo('grant_story_levels', options.GrantStoryLevels, can_break_logic=True),
+
+            'grant_story_tech': ConfigurableOptionInfo('grant_story_tech', options.GrantStoryTech, can_break_logic=True),
+            'control_ally': ConfigurableOptionInfo('take_over_ai_allies', options.TakeOverAIAllies, can_break_logic=True),
+            # SoA
+            'soa_presence': ConfigurableOptionInfo('spear_of_adun_presence', options.SpearOfAdunPresence, can_break_logic=True),
+            'soa_in_nobuilds': ConfigurableOptionInfo('spear_of_adun_present_in_no_build', options.SpearOfAdunPresentInNoBuild, can_break_logic=True),
+            'soa_passive_presence': ConfigurableOptionInfo('spear_of_adun_passive_ability_presence', options.SpearOfAdunPassiveAbilityPresence, can_break_logic=True),
+            'soa_passives_in_nobuilds': ConfigurableOptionInfo('spear_of_adun_passive_present_in_no_build', options.SpearOfAdunPassivesPresentInNoBuild),
+            # Fillers
+            'minerals_per_item': ConfigurableOptionInfo('minerals_per_item', options.MineralsPerItem, ConfigurableOptionType.INTEGER),
+            'gas_per_item': ConfigurableOptionInfo('vespene_per_item', options.VespenePerItem, ConfigurableOptionType.INTEGER),
+            'supply_per_item': ConfigurableOptionInfo('starting_supply_per_item', options.StartingSupplyPerItem, ConfigurableOptionType.INTEGER),
+            'max_supply_per_item': ConfigurableOptionInfo('maximum_supply_per_item', options.MaximumSupplyPerItem, ConfigurableOptionType.INTEGER),
+            'reduced_supply_per_item': ConfigurableOptionInfo('maximum_supply_reduction_per_item', options.MaximumSupplyReductionPerItem, ConfigurableOptionType.INTEGER),
+            'lowest_max_supply': ConfigurableOptionInfo('lowest_maximum_supply', options.LowestMaximumSupply, ConfigurableOptionType.INTEGER),
+            'research_cost_per_item': ConfigurableOptionInfo('research_cost_reduction_per_item', options.ResearchCostReductionPerItem, ConfigurableOptionType.INTEGER),
+            # settings / adjustments
+            'speed': ConfigurableOptionInfo('game_speed', options.GameSpeed),
+            'difficulty': ConfigurableOptionInfo('game_difficulty', options.GameDifficulty),
+            'no_forced_camera': ConfigurableSettingInfo('game_disable_forced_camera', Starcraft2Settings.GameDisableForcedCamera),
+            'skip_cutscenes': ConfigurableSettingInfo('game_skip_cutscenes', Starcraft2Settings.GameSkipCutscenes),
+            'scouting': ConfigurableOptionInfo('mission_order_scouting', options.MissionOrderScouting),
+            'scouting_show_traps': ConfigurableSettingInfo('scouting_show_traps', Starcraft2Settings.ScoutingShowTraps),
+            'enable_morphling': ConfigurableOptionInfo('enable_morphling', options.EnableMorphling, can_break_logic=True),
+            'difficulty_damage_modifier': ConfigurableOptionInfo('difficulty_damage_modifier', options.DifficultyDamageModifier),
+            'void_trade_age_limit': ConfigurableOptionInfo('trade_age_limit', options.VoidTradeAgeLimit),
+            'void_trade_workers': ConfigurableOptionInfo('trade_workers_allowed', options.VoidTradeWorkers),
+            'mercenary_highlanders': ConfigurableOptionInfo('mercenary_highlanders', options.MercenaryHighlanders),
+            # Misc
+            'max_upgrade_level': ConfigurableOptionInfo('max_upgrade_level', options.MaxUpgradeLevel, ConfigurableOptionType.INTEGER),
+            'generic_upgrade_research': ConfigurableOptionInfo('generic_upgrade_research', options.GenericUpgradeResearch, can_break_logic=True),
+            'generic_upgrade_research_speedup': ConfigurableOptionInfo('generic_upgrade_research_speedup', options.GenericUpgradeResearchSpeedup),
+        }
 
         WARNING_COLOUR = "salmon"
         CMD_COLOUR = "slateblue"
+        LOGIC_WARNING = "**"
         boolean_option_map = {
-            'y': 'true', 'yes': 'true', 'n': 'false', 'no': 'false', 'true': 'true', 'false': 'false',
+            'true': 'true', 'y': 'true', 'yes': 'true', '+': 'true',
+            'false': 'false', 'n': 'false', 'no': 'false', '-': 'false',
         }
 
-        help_message = ColouredMessage(inspect.cleandoc("""
+        # Construct help text
+        help_message = (ColouredMessage(inspect.cleandoc("""
             Options
         --------------------
-        """))('\n')
-        for option in configurable_options:
+        """))
+            ("\n * Options marked with a ")
+            .coloured(LOGIC_WARNING, WARNING_COLOUR)
+            (" may break logic if changed.\n")
+        )
+        for this_option_name, option in configurable_options.items():
             option_help_text = inspect.cleandoc(option.option_class.__doc__ or "No description provided.").split('\n', 1)[0]
-            help_message.coloured(option.name, CMD_COLOUR)(": " + " | ".join(option.option_class.options)
-                + f" -- {option_help_text}\n")
-            if option.can_break_logic:
-                help_message.coloured(LOGIC_WARNING, WARNING_COLOUR)
+            if not option_help_text.endswith("."):
+                option_help_text += "."
+            help_message.coloured(this_option_name, CMD_COLOUR)
+            if isinstance(option, ConfigurableOptionInfo):
+                if option.can_break_logic:
+                    help_message.coloured(LOGIC_WARNING, WARNING_COLOUR)
+                help_message(": " + " | ".join(option.option_class.options) + f" -- {option_help_text}\n")
+            else:
+                if issubclass(option.option_class, int):
+                    help_message(f": integer -- {option_help_text}\n")
+                elif issubclass(option.option_class, coresettings.Bool):
+                    # Note(mm): Copying display order of choices in coreoptions.Toggle
+                    help_message(f": false | true -- {option_help_text}\n")
+                else:
+                    help_message(f": {option_help_text}\n")
         help_message("--------------------\nEnter an option without arguments to see its current value.\n")
 
+        # Display help text
         if not option_name or option_name == 'list' or option_name == 'help':
             help_message.send(self.ctx)
             return
-        for option in configurable_options:
-            if option_name == option.name:
-                option_value = boolean_option_map.get(option_value.lower(), option_value)
-                if not option_value:
-                    pass
-                elif option.option_type == ConfigurableOptionType.ENUM and option_value in option.option_class.options:
-                    self.ctx.__dict__[option.variable_name] = option.option_class.options[option_value]
-                elif option.option_type == ConfigurableOptionType.INTEGER:
-                    try:
-                        self.ctx.__dict__[option.variable_name] = int(option_value, base=0)
-                    except:
-                        self.output(f"{option_value} is not a valid integer")
-                else:
-                    self.output(f"Unknown option value '{option_value}'")
-                ColouredMessage(f"{option.name} is '{option.option_class.get_option_name(self.ctx.__dict__[option.variable_name])}'").send(self.ctx)
-                break
-        else:
-            self.output(f"Unknown option '{option_name}'")
+        option = configurable_options.get(option_name)
+        if not option:
             help_message.send(self.ctx)
+            self.output(f"Unknown option '{option_name}")
+            return
 
+        option_value = boolean_option_map.get(option_value.lower(), option_value)
+        if not option_value:
+            pass
+        elif isinstance(option, ConfigurableSettingInfo):
+            if issubclass(option.option_class, coresettings.Bool):
+                if option_value == 'true':
+                    SC2World.settings.__dict__[option.setting_name] = True
+                elif option_value == 'false':
+                    SC2World.settings.__dict__[option.setting_name] = False
+                else:
+                    self.output(f"{option_value} is not a valid true/false value")
+            elif issubclass(option.option_class, int):
+                try:
+                    int_value = int(option_value, base=0)
+                    SC2World.settings.__dict__[option.setting_name] = int_value
+                except ValueError:
+                    self.output(f"{option_value} is not a valid integer")
+            else:
+                SC2World.settings.__dict__[option.setting_name] = option_value
+            force_settings_save_on_close()
+        elif option.option_type == ConfigurableOptionType.ENUM and option_value in option.option_class.options:
+            self.ctx.__dict__[option.variable_name] = option.option_class.options[option_value]
+        elif option.option_type == ConfigurableOptionType.INTEGER:
+            try:
+                self.ctx.__dict__[option.variable_name] = int(option_value, base=0)
+            except:
+                self.output(f"{option_value} is not a valid integer")
+        else:
+            self.output(f"Unknown option value '{option_value}'")
+        if isinstance(option, ConfigurableSettingInfo):
+            presentable_value = str(SC2World.settings.__dict__.get(
+                option.setting_name,
+                Starcraft2Settings.__dict__[option.setting_name])
+            ).lower()
+        elif issubclass(option.option_class, coreoptions.Toggle):
+            # get_option_name() will return 'yes' and 'no' for Toggles, which looks wrong in the UI
+            presentable_value = 'true' if self.ctx.__dict__[option.variable_name] else 'false'
+        else:
+            presentable_value = option.option_class.get_option_name(self.ctx.__dict__[option.variable_name])
+        ColouredMessage(f"{option_name} is '{presentable_value}'").send(self.ctx)
+        if "scouting" in option_name and self.ctx.ui is not None:
+            # Some options, particularly those affecting scouting, require a redraw
+            self.ctx.ui.pending_redraw = True
+
+    @mark_raw
     def _cmd_color(self, faction: str = "", color: str = "") -> None:
-        """Changes the player color for a given faction."""
+        """takes faction, color. Changes the player color for a given faction."""
+        arguments = parse_client_cmd_args(faction, 2, "/color")
+        if isinstance(arguments, Error):
+            self.output(arguments.message)
+            return
+        faction, color = arguments
         player_colors = [
             "White", "Red", "Blue", "Teal",
             "Purple", "Yellow", "Orange", "Green",
@@ -485,11 +564,12 @@ class StarcraftClientProcessor(ClientCommandProcessor):
             self.ctx.pending_color_update = True
             self.output(f"Color for {faction} set to " + player_colors[self.ctx.__dict__[var_names[faction]]])
 
-    def _cmd_windowed_mode(self, value="") -> None:
+    @mark_raw
+    def _cmd_windowed_mode(self, true_or_false: str = "") -> None:
         """Controls whether sc2 will launch in Windowed mode. Persists across sessions."""
-        if not value:
+        if not true_or_false:
             sc2_logger.info("Use `/windowed_mode [true|false]` to set the windowed mode")
-        elif value.casefold() in ('t', 'true', 'yes', 'y'):
+        elif true_or_false.casefold() in ('t', 'true', 'yes', 'y', '+'):
             SC2World.settings.game_windowed_mode = True
             force_settings_save_on_close()
         else:
@@ -497,15 +577,25 @@ class StarcraftClientProcessor(ClientCommandProcessor):
             force_settings_save_on_close()
         sc2_logger.info(f"Windowed mode is: {SC2World.settings.game_windowed_mode}")
 
-    def _cmd_disable_mission_check(self) -> bool:
-        """Disables the check to see if a mission is available to play.  Meant for co-op runs where one player can play
-        the next mission in a chain the other player is doing."""
-        self.ctx.missions_unlocked = True
-        sc2_logger.info("Mission check has been disabled")
+    @mark_raw
+    def _cmd_mission_check(self, enable_or_disable: str = "") -> bool:
+        """
+        If disabled, allows playing missions even if they are not unlocked.
+        """
+        if enable_or_disable.casefold() in ("n", "no", "f", "false", "-", "disable", "disabled"):
+            if (not self.ctx.missions_unlocked) and self.ctx.ui:
+                self.ctx.ui.pending_redraw = True
+            self.ctx.missions_unlocked = True
+            sc2_logger.info("Mission check has been disabled")
+        else:
+            if self.ctx.missions_unlocked and self.ctx.ui:
+                self.ctx.ui.pending_redraw = True
+            self.ctx.missions_unlocked = False
+            sc2_logger.info("Mission check has been enabled")
         return True
 
     @mark_raw
-    def _cmd_set_path(self, path: str = '') -> bool:
+    def _cmd_set_path(self, path: str = "") -> bool:
         """Manually set the SC2 install directory (if the automatic detection fails)."""
         if path:
             SC2World.settings.sc2_install_path = SC2World.settings.Sc2InstallPath(path)
@@ -577,6 +667,23 @@ class StarcraftClientProcessor(ClientCommandProcessor):
         return True
 
 
+def parse_client_cmd_args(args: str, num_args: int, command_name: str) -> Error[str] | list[str]:
+    """
+    Split arguments by spaces and return as a list.
+    Pads the list with empty strings if too few arguments are given.
+    Returns an error if too many arguments are given.
+    Use this with @mark_raw to make sure the user doesn't see a stack trace if they provide too many args.
+    """
+    result = [t for t in args.split(" ") if t]
+    if len(result) > num_args:
+        return Error(
+            f"Too many arguments provided to {command_name}. Expected {num_args}, got {len(result)}"
+        )
+    while len(result) < num_args:
+        result.append("")
+    return result
+
+
 class SC2JSONtoTextParser(JSONtoTextParser):
     def __init__(self, ctx: SC2Context) -> None:
         self.handlers = {
@@ -614,8 +721,6 @@ class SC2Context(CommonContext):
         self.data_out_of_date: bool = False
         self.difficulty = -1
         self.game_speed = -1
-        self.disable_forced_camera = 0
-        self.skip_cutscenes = 0
         self.all_in_choice = 0
         self.mission_order = 0
         self.player_color_raynor = ColorChoice.option_blue
@@ -624,7 +729,6 @@ class SC2Context(CommonContext):
         self.player_color_protoss = ColorChoice.option_blue
         self.player_color_nova = ColorChoice.option_dark_grey
         self.pending_color_update = False
-        self.kerrigan_presence: int = KerriganPresence.default
         self.kerrigan_primal_status = 0
         self.enable_morphling = EnableMorphling.default
         self.custom_mission_order: list[CampaignSlotData] = []
@@ -661,7 +765,8 @@ class SC2Context(CommonContext):
         self.maximum_supply_reduction_per_item: int = options.MaximumSupplyReductionPerItem.default
         self.lowest_maximum_supply: int = options.LowestMaximumSupply.default
         self.research_cost_reduction_per_item: int = options.ResearchCostReductionPerItem.default
-        self.nova_presence: frozenset[str] = NovaPresence.default
+        self.enabled_heroes: frozenset[str] = EnabledHeroes.default
+        self.hero_presence: dict[SC2Campaign, dict[SC2Race], int] = HeroPresence.default
         self.mercenary_highlanders: bool = False
         self.kerrigan_levels_per_mission_completed = 0
         self.trade_enabled: int = EnableVoidTrade.default
@@ -676,7 +781,7 @@ class SC2Context(CommonContext):
         self.difficulty_damage_modifier: int = DifficultyDamageModifier.default
         self.mission_order_scouting = MissionOrderScouting.option_none
         self.mission_item_classification: dict[str, int] | None = None
-        self.war_council_nerfs: bool = False
+        self.show_war_council_nerfs: bool = False
 
     async def server_auth(self, password_requested: bool = False) -> None:
         self.game = STARCRAFT2
@@ -725,15 +830,26 @@ class SC2Context(CommonContext):
         elif str(SC2World.settings.game_speed).casefold() == 'faster':
             self.game_speed = GameSpeed.option_faster
 
-        if str(SC2World.settings.disable_forced_camera).casefold() == 'true':
-            self.disable_forced_camera = DisableForcedCamera.option_true
-        elif str(SC2World.settings.disable_forced_camera).casefold() == 'false':
-            self.disable_forced_camera = DisableForcedCamera.option_false
+    def unpack_hero_presence(self, slot_data: dict[str, str]) -> dict[SC2Campaign, dict[SC2Race, int]]:
+        campaigns = [campaign for campaign in SC2Campaign if campaign != SC2Campaign.GLOBAL] 
+        result: dict[SC2Campaign, dict[SC2Race, int]] = {campaign: {} for campaign in campaigns}
+        for key, value in slot_data.items():
+            campaign, race, = key.split(".")
+            result[lookup_id_to_campaign[int(campaign)]][lookup_id_to_race[int(race)]] = int(value)
+        return result
 
-        if str(SC2World.settings.skip_cutscenes).casefold() == 'true':
-            self.skip_cutscenes = SkipCutscenes.option_true
-        elif str(SC2World.settings.skip_cutscenes).casefold() == 'false':
-            self.skip_cutscenes = SkipCutscenes.option_false
+    def default_hero_presence(self, kerrigan_present: bool = True) -> dict[SC2Campaign, dict[SC2Race, int]]:
+        if kerrigan_present: 
+            return {
+                SC2Campaign.HOTS: {SC2Race.ZERG: HeroFlag.KERRIGAN.value},
+                SC2Campaign.NCO: {SC2Race.TERRAN: HeroFlag.NOVA.value},
+            }
+        else:
+            return {
+                # only used by compat code
+                SC2Campaign.NCO: {SC2Race.TERRAN: HeroFlag.NOVA.value},
+            }
+
 
     def on_package(self, cmd: str, args: dict) -> None:
         if cmd == "Connected":
@@ -753,8 +869,6 @@ class SC2Context(CommonContext):
 
             self.difficulty = args["slot_data"]["game_difficulty"]
             self.game_speed = args["slot_data"].get("game_speed", GameSpeed.option_default)
-            self.disable_forced_camera = args["slot_data"].get("disable_forced_camera", DisableForcedCamera.default)
-            self.skip_cutscenes = args["slot_data"].get("skip_cutscenes", SkipCutscenes.default)
             self.all_in_choice = args["slot_data"]["all_in_map"]
             self.slot_data_version = args["slot_data"].get("version", 2)
 
@@ -838,14 +952,13 @@ class SC2Context(CommonContext):
                 self.slot_data_version,
                 args["slot_data"].get("player_color_nova", ColorChoice.option_dark_grey)
             )
-            self.war_council_nerfs = args["slot_data"].get("war_council_nerfs", WarCouncilNerfs.option_false)
+            self.show_war_council_nerfs = args["slot_data"].get("war_council_nerfs", WarCouncilNerfs.option_false)
             self.mercenary_highlanders = args["slot_data"].get("mercenary_highlanders", MercenaryHighlanders.option_false)
             self.generic_upgrade_missions = args["slot_data"].get("generic_upgrade_missions", GenericUpgradeMissions.default)
             self.max_upgrade_level = args["slot_data"].get("max_upgrade_level", MaxUpgradeLevel.default)
             self.generic_upgrade_items = args["slot_data"].get("generic_upgrade_items", GenericUpgradeItems.option_individual_items)
             self.generic_upgrade_research = args["slot_data"].get("generic_upgrade_research", GenericUpgradeResearch.option_vanilla)
             self.generic_upgrade_research_speedup = args["slot_data"].get("generic_upgrade_research_speedup", GenericUpgradeResearchSpeedup.default)
-            self.kerrigan_presence = args["slot_data"].get("kerrigan_presence", KerriganPresence.option_vanilla)
             self.kerrigan_primal_status = args["slot_data"].get("kerrigan_primal_status", KerriganPrimalStatus.option_vanilla)
             self.kerrigan_levels_per_mission_completed = args["slot_data"].get("kerrigan_levels_per_mission_completed", 0)
             self.kerrigan_levels_per_mission_completed_cap = args["slot_data"].get("kerrigan_levels_per_mission_completed_cap", -1)
@@ -870,18 +983,25 @@ class SC2Context(CommonContext):
             self.maximum_supply_reduction_per_item = args["slot_data"].get("maximum_supply_reduction_per_item", options.MaximumSupplyReductionPerItem.default)
             self.lowest_maximum_supply = args["slot_data"].get("lowest_maximum_supply", options.LowestMaximumSupply.default)
             self.research_cost_reduction_per_item = args["slot_data"].get("research_cost_reduction_per_item", options.ResearchCostReductionPerItem.default)
-            self.nova_presence = args["slot_data"].get("nova_presence", options.NovaPresence.default)
-            self.nova_grant_story_tech = args["slot_data"].get("nova_grant_story_tech", False)
-            if self.slot_data_version < 4:
-                if args["slot_data"].get("nova_covert_ops_only", True):
-                    self.nova_presence = frozenset((NovaPresenceOptions.NCO_TERRAN,))
-                else:
-                    self.nova_presence = frozenset((NovaPresenceOptions.NCO_TERRAN, NovaPresenceOptions.GHOST_OF_A_CHANCE,))
+            self.nova_items_granted = args["slot_data"].get("nova_items_granted", False)
+            hero_presence_args = args["slot_data"].get("hero_presence","0")
+            if hero_presence_args != "0":
+                self.hero_presence = self.unpack_hero_presence(hero_presence_args)
+            else:
+                self.hero_presence = self.default_hero_presence(True)
+            # # TODO (Snarky): NCO Nova is currently disabled. Revisit if enabled.
+            # # Generic Nova presence never made it to live, so it doesn't need compat code
+            # if self.slot_data_version < 4:
+            #     if args["slot_data"].get("nova_covert_ops_only", True):
+            #     else:
+            # if self.slot_data_version < 5:
+            #     if args["slot_data"].get("use_nova_wol_fallback", True):
+            #     else:
             if self.slot_data_version < 5:
-                if args["slot_data"].get("use_nova_wol_fallback", True):
-                    self.nova_presence = frozenset((NovaPresenceOptions.NCO_TERRAN,))
+                if args["slot_data"].get("kerrigan_presence", True):
+                    self.hero_presence = self.default_hero_presence(True)
                 else:
-                    self.nova_presence = frozenset((NovaPresenceOptions.NCO_TERRAN, NovaPresenceOptions.GHOST_OF_A_CHANCE,))
+                    self.hero_presence = self.default_hero_presence(False)
             self.trade_enabled = args["slot_data"].get("enable_void_trade", EnableVoidTrade.option_false)
             self.trade_age_limit = args["slot_data"].get("void_trade_age_limit", VoidTradeAgeLimit.default)
             self.trade_workers_allowed = args["slot_data"].get("void_trade_workers", VoidTradeWorkers.default)

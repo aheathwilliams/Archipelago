@@ -15,8 +15,6 @@ from ..options import (
     EnabledCampaigns, MissionOrder, ExcludeOverpoweredItems,
     VanillaItemsOnly, MaximumCampaignSize,
 )
-from ..tables import NovaPresenceOptions
-
 class TestItemFiltering(Sc2SetupTestBase):
     def test_explicit_locks_excludes_interact_and_set_flags(self):
         world_options = {
@@ -57,8 +55,10 @@ class TestItemFiltering(Sc2SetupTestBase):
                 item_groups.ItemGroupNames.NOVA_EQUIPMENT: -1,
                 item_names.MARINE_PROGRESSIVE_STIMPACK: 1,
                 item_names.MARAUDER_PROGRESSIVE_STIMPACK: 2,
+                item_names.FIREBAT_PROGRESSIVE_STIMPACK: -1,
                 item_names.MARINE: -1,
                 item_names.MARAUDER: -1,
+                item_names.FIREBAT: -1,
                 item_names.REAPER: 1,
                 item_names.DIAMONDBACK: -1,
                 item_names.HELLION: 1,
@@ -78,10 +78,11 @@ class TestItemFiltering(Sc2SetupTestBase):
                 item_names.NOVA_PULSE_GRENADES: -1,    # Necessary to pass logic
                 item_names.NOVA_JUMP_SUIT_MODULE: -1,  # Necessary to pass logic
                 item_groups.ItemGroupNames.BARRACKS_UNITS: -1,
-                item_names.NOVA_PROGRESSIVE_STEALTH_SUIT_MODULE: 1,
+                item_names.NOVA_PROGRESSIVE_STEALTH_SUIT_MODULE: 2,
                 item_names.HELLION: 1,
                 item_names.MARINE_PROGRESSIVE_STIMPACK: 1,
                 item_names.MARAUDER_PROGRESSIVE_STIMPACK: -1,
+                item_names.FIREBAT_PROGRESSIVE_STIMPACK: 1,
                 # Additional unexcludes for logic
                 item_names.MEDIVAC: -1,
                 item_names.BATTLECRUISER: -1,
@@ -99,10 +100,11 @@ class TestItemFiltering(Sc2SetupTestBase):
         self.assertIn(item_names.MARINE, itempool)
         self.assertIn(item_names.MARAUDER, itempool)
         self.assertIn(item_names.REAPER, itempool)
-        self.assertEqual(itempool.count(item_names.NOVA_PROGRESSIVE_STEALTH_SUIT_MODULE), 1, "Stealth suit occurred the wrong number of times")
+        self.assertEqual(itempool.count(item_names.NOVA_PROGRESSIVE_STEALTH_SUIT_MODULE), 2, "Stealth suit occurred the wrong number of times")
         self.assertIn(item_names.HELLION, itempool)
         self.assertEqual(itempool.count(item_names.MARINE_PROGRESSIVE_STIMPACK), 2, f"Marine stimpacks weren't unexcluded  (seed {self.multiworld.seed})")
         self.assertEqual(itempool.count(item_names.MARAUDER_PROGRESSIVE_STIMPACK), 2, f"Marauder stimpacks weren't unexcluded (seed {self.multiworld.seed})")
+        self.assertEqual(itempool.count(item_names.FIREBAT_PROGRESSIVE_STIMPACK), 1, f"Firebat stimpacks occured the wrong number of times (seed {self.multiworld.seed})")
         self.assertNotIn(item_names.DIAMONDBACK, itempool)
         self.assertNotIn(item_names.NOVA_BLAZEFIRE_GUNBLADE, itempool)
         self.assertNotIn(item_names.NOVA_ENERGY_SUIT_MODULE, itempool)
@@ -943,7 +945,7 @@ class TestItemFiltering(Sc2SetupTestBase):
                     'goal': True,
                     'layout': {
                         'type': 'column',
-                        'size': 2,
+                        'size': 3,
                         'missions': [
                             {
                                 'index': 0,
@@ -951,6 +953,10 @@ class TestItemFiltering(Sc2SetupTestBase):
                             },
                             {
                                 'index': 1,
+                                'mission_pool': [SC2Mission.RENDEZVOUS.mission_name]
+                            },
+                            {
+                                'index': 2,
                                 'mission_pool': [SC2Mission.SUPREME.mission_name]
                             },
                         ]
@@ -958,6 +964,7 @@ class TestItemFiltering(Sc2SetupTestBase):
                 }
             },
             'grant_story_levels': options.GrantStoryLevels.option_additive,
+            'grant_story_tech': options.GrantStoryTech.option_no_grant,
             'excluded_items': {
                 item_names.KERRIGAN_LEAPING_STRIKE: -1,
                 item_names.KERRIGAN_MEND: -1,
@@ -1107,73 +1114,75 @@ class TestItemFiltering(Sc2SetupTestBase):
         }
         self.assertDictEqual(expected_result, upgrade_item_counts)
 
-    def test_ghost_of_a_chance_generates_without_nco(self) -> None:
-        world_options = {
-            **self.TERRAN_CAMPAIGNS,
-            'mission_order': MissionOrder.option_custom,
-            'nova_presence': {NovaPresenceOptions.GHOST_OF_A_CHANCE_AUTO},
-            'custom_mission_order': {
-                'test': {
-                    'type': 'column',
-                    'size': 1,
-                    'mission_pool': [
-                        SC2Mission.GHOST_OF_A_CHANCE.mission_name
-                    ]
-                }
-            }
-        }
+    # Ghost of a Chance NCO Nova disabled for now
+    #
+    # def test_ghost_of_a_chance_generates_without_nco(self) -> None:
+    #     world_options = {
+    #         **self.TERRAN_CAMPAIGNS,
+    #         'mission_order': MissionOrder.option_custom,
+    #         'nova_presence': {NovaPresenceOptions.GHOST_OF_A_CHANCE_AUTO},
+    #         'custom_mission_order': {
+    #             'test': {
+    #                 'type': 'column',
+    #                 'size': 1,
+    #                 'mission_pool': [
+    #                     SC2Mission.GHOST_OF_A_CHANCE.mission_name
+    #                 ]
+    #             }
+    #         }
+    #     }
 
-        self.generate_world(world_options)
-        itempool = [item.name for item in self.multiworld.itempool]
+    #     self.generate_world(world_options)
+    #     itempool = [item.name for item in self.multiworld.itempool]
 
-        self.assertNotIn(item_names.NOVA_C20A_CANISTER_RIFLE, itempool)
-        self.assertNotIn(item_names.NOVA_DOMINATION, itempool)
+    #     self.assertNotIn(item_names.NOVA_C20A_CANISTER_RIFLE, itempool)
+    #     self.assertNotIn(item_names.NOVA_DOMINATION, itempool)
 
-    def test_ghost_of_a_chance_generates_using_nco_nova(self) -> None:
-        world_options = {
-            **self.TERRAN_CAMPAIGNS,
-            'mission_order': MissionOrder.option_custom,
-            'nova_presence': {NovaPresenceOptions.GHOST_OF_A_CHANCE, NovaPresenceOptions.NCO_TERRAN},
-            'custom_mission_order': {
-                'test': {
-                    'type': 'column',
-                    'size': 3,
-                    'mission_pool': [
-                        SC2Mission.LIBERATION_DAY.mission_name, # Starter mission
-                        SC2Mission.GHOST_OF_A_CHANCE.mission_name,
-                        SC2Mission.FLASHPOINT.mission_name, # A NCO mission. Grants Nova story tech otherwise
-                    ]
-                }
-            }
-        }
+    # def test_ghost_of_a_chance_generates_using_nco_nova(self) -> None:
+    #     world_options = {
+    #         **self.TERRAN_CAMPAIGNS,
+    #         'mission_order': MissionOrder.option_custom,
+    #         'nova_presence': {NovaPresenceOptions.GHOST_OF_A_CHANCE, NovaPresenceOptions.NCO_TERRAN},
+    #         'custom_mission_order': {
+    #             'test': {
+    #                 'type': 'column',
+    #                 'size': 3,
+    #                 'mission_pool': [
+    #                     SC2Mission.LIBERATION_DAY.mission_name, # Starter mission
+    #                     SC2Mission.GHOST_OF_A_CHANCE.mission_name,
+    #                     SC2Mission.FLASHPOINT.mission_name, # A NCO mission. Grants Nova story tech otherwise
+    #                 ]
+    #             }
+    #         }
+    #     }
 
-        self.generate_world(world_options)
-        itempool = [item.name for item in self.multiworld.itempool]
+    #     self.generate_world(world_options)
+    #     itempool = [item.name for item in self.multiworld.itempool]
 
-        self.assertGreater(len({item_names.NOVA_C20A_CANISTER_RIFLE, item_names.NOVA_DOMINATION}.intersection(itempool)), 0)
+    #     self.assertGreater(len({item_names.NOVA_C20A_CANISTER_RIFLE, item_names.NOVA_DOMINATION}.intersection(itempool)), 0)
 
-    def test_ghost_of_a_chance_generates_with_nco(self) -> None:
-        world_options = {
-            **self.TERRAN_CAMPAIGNS,
-            'mission_order': MissionOrder.option_custom,
-            'nova_presence': {NovaPresenceOptions.GHOST_OF_A_CHANCE_AUTO, NovaPresenceOptions.NCO_TERRAN},
-            'custom_mission_order': {
-                'test': {
-                    'type': 'column',
-                    'size': 3,
-                    'mission_pool': [
-                        SC2Mission.LIBERATION_DAY.mission_name, # Starter mission
-                        SC2Mission.GHOST_OF_A_CHANCE.mission_name,
-                        SC2Mission.FLASHPOINT.mission_name, # A NCO mission
-                    ]
-                }
-            }
-        }
+    # def test_ghost_of_a_chance_generates_with_nco(self) -> None:
+    #     world_options = {
+    #         **self.TERRAN_CAMPAIGNS,
+    #         'mission_order': MissionOrder.option_custom,
+    #         'nova_presence': {NovaPresenceOptions.GHOST_OF_A_CHANCE_AUTO, NovaPresenceOptions.NCO_TERRAN},
+    #         'custom_mission_order': {
+    #             'test': {
+    #                 'type': 'column',
+    #                 'size': 3,
+    #                 'mission_pool': [
+    #                     SC2Mission.LIBERATION_DAY.mission_name, # Starter mission
+    #                     SC2Mission.GHOST_OF_A_CHANCE.mission_name,
+    #                     SC2Mission.FLASHPOINT.mission_name, # A NCO mission
+    #                 ]
+    #             }
+    #         }
+    #     }
 
-        self.generate_world(world_options)
-        itempool = [item.name for item in self.multiworld.itempool]
+    #     self.generate_world(world_options)
+    #     itempool = [item.name for item in self.multiworld.itempool]
 
-        self.assertGreater(len({item_names.NOVA_C20A_CANISTER_RIFLE, item_names.NOVA_DOMINATION}.intersection(itempool)), 0)
+    #     self.assertGreater(len({item_names.NOVA_C20A_CANISTER_RIFLE, item_names.NOVA_DOMINATION}.intersection(itempool)), 0)
 
     def test_exclude_overpowered_items(self) -> None:
         world_options = {

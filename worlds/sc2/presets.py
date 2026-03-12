@@ -1,24 +1,21 @@
 from typing import Any, Dict
 
-import Options as ap_options
-from .. import options
 from Options import Accessibility, ProgressionBalancing
-from .. import item_names
-from ..mission_tables import SC2Race, SC2Campaign
-from ..tables import NovaPresenceOptions
+from . import item_names
+from .mission_tables import SC2Race, SC2Campaign
 
-from ..options import ( 
+from .options import ( 
     # avoid import *
-    GameDifficulty, DifficultyDamageModifier, GameSpeed, DisableForcedCamera, SkipCutscenes, AllInMap, MissionOrder, 
+    GameDifficulty, DifficultyDamageModifier, GameSpeed, AllInMap, MissionOrder, 
     MaximumCampaignSize, TwoStartPositions, KeyMode, PlayerColorTerranRaynor, PlayerColorProtoss, PlayerColorZerg, 
     PlayerColorZergPrimal, PlayerColorNova, SelectedRaces, EnabledCampaigns, EnableRaceSwapVariants, EnableMissionRaceBalancing, 
     ShuffleCampaigns, ShuffleNoBuild, StarterUnit, RequiredTactics, EnableVoidTrade, VoidTradeAgeLimit, VoidTradeWorkers, 
     EnsureGenericItems, MinNumberOfUpgrades, MaxNumberOfUpgrades, MercenaryHighlanders, MaxUpgradeLevel, GenericUpgradeMissions, 
-    GenericUpgradeResearch, GenericUpgradeResearchSpeedup, GenericUpgradeItems, KerriganPresence, KerriganLevelsPerMissionCompleted, 
+    GenericUpgradeResearch, GenericUpgradeResearchSpeedup, GenericUpgradeItems, KerriganLevelsPerMissionCompleted, 
     KerriganLevelsPerMissionCompletedCap, KerriganLevelItemSum, KerriganLevelItemDistribution, KerriganTotalLevelCap, StartPrimaryAbilities, 
     KerriganPrimalStatus, KerriganMaxActiveAbilities, KerriganMaxPassiveAbilities, EnableMorphling, WarCouncilNerfs, SpearOfAdunPresence, 
     SpearOfAdunPresentInNoBuild, SpearOfAdunPassiveAbilityPresence, SpearOfAdunPassivesPresentInNoBuild, SpearOfAdunMaxActiveAbilities, 
-    SpearOfAdunMaxAutocastAbilities, GrantStoryTech, GrantStoryLevels, NovaMaxWeapons, NovaMaxGadgets, NovaPresence, 
+    SpearOfAdunMaxAutocastAbilities, GrantStoryTech, GrantStoryLevels, NovaMaxWeapons, NovaMaxGadgets,
     TakeOverAIAllies, LockedItems, ExcludedItems, UnexcludedItems, ExcludedMissions, DifficultyCurve, ExcludeVeryHardMissions, VanillaItemsOnly, 
     ExcludeOverpoweredItems, VictoryCache, VanillaLocations, ExtraLocations, ChallengeLocations, MasteryLocations, BasebustLocations, 
     SpeedrunLocations, PreventativeLocations, FillerPercentage, MineralsPerItem, VespenePerItem, StartingSupplyPerItem, MaximumSupplyPerItem, 
@@ -225,10 +222,6 @@ bread_and_butter_settings = {
     OPTION_NAME[ChallengeLocations]:                    ChallengeLocations.option_enabled,
     OPTION_NAME[MasteryLocations]:                      MasteryLocations.option_disabled,
     OPTION_NAME[WarCouncilNerfs]:                       WarCouncilNerfs.option_true,
-    OPTION_NAME[NovaPresence]: {
-        NovaPresenceOptions.NCO_TERRAN,
-        NovaPresenceOptions.GHOST_OF_A_CHANCE,
-    },
     OPTION_NAME[GenericUpgradeItems]:                   GenericUpgradeItems.option_individual_items,
     OPTION_NAME[MinNumberOfUpgrades]:                   1,
     OPTION_NAME[MaxNumberOfUpgrades]:                   4,
@@ -350,13 +343,11 @@ evil_logic_settings = {
     OPTION_NAME[ChallengeLocations]:                    ChallengeLocations.option_enabled,
     OPTION_NAME[MasteryLocations]:                      MasteryLocations.option_enabled,
     OPTION_NAME[WarCouncilNerfs]:                       WarCouncilNerfs.option_true,
-    OPTION_NAME[NovaPresence]:                          {},
     OPTION_NAME[GenericUpgradeItems]:                   GenericUpgradeItems.option_individual_items,
     OPTION_NAME[MinNumberOfUpgrades]:                   1,
     OPTION_NAME[MaxNumberOfUpgrades]:                   2,
     OPTION_NAME[NovaMaxWeapons]:                        1,
     OPTION_NAME[NovaMaxGadgets]:                        1,
-    OPTION_NAME[KerriganPresence]:                      KerriganPresence.option_not_present,
     OPTION_NAME[SpearOfAdunPresence]:                   SpearOfAdunPresence.option_any_race_lotv,
     OPTION_NAME[SpearOfAdunPresentInNoBuild]:           SpearOfAdunPresentInNoBuild.option_false,
     OPTION_NAME[SpearOfAdunPassiveAbilityPresence]:     SpearOfAdunPassiveAbilityPresence.option_any_race_lotv,        
@@ -401,8 +392,7 @@ full_campaign_settings = {
     OPTION_NAME[MaximumCampaignSize]:                   MaximumCampaignSize.range_end,
     OPTION_NAME[TwoStartPositions]:                     TwoStartPositions.option_true,
     OPTION_NAME[StarterUnit]:                           StarterUnit.option_off,
-    OPTION_NAME[EnableMorphling]:                       EnableMorphling.option_true,
-    OPTION_NAME[NovaPresence]:                          NovaPresence.valid_keys,          
+    OPTION_NAME[EnableMorphling]:                       EnableMorphling.option_true,     
     OPTION_NAME[GrantStoryTech]:                        GrantStoryTech.option_allow_substitutes,
     OPTION_NAME[TakeOverAIAllies]:                      TakeOverAIAllies.option_false,
     OPTION_NAME[DifficultyCurve]:                       DifficultyCurve.option_standard,

@@ -23,8 +23,10 @@ from .client import SC2Context, calc_unfinished_nodes, is_mission_available, com
 from .item.item_descriptions import item_descriptions
 from .item.item_annotations import ITEM_NAME_ANNOTATIONS
 from .mission_order.entry_rules import RuleData, SubRuleRuleData, ItemRuleData
-from .mission_tables import lookup_id_to_mission, campaign_race_exceptions, \
-    SC2Mission, SC2Race
+from .mission_tables import (
+    lookup_id_to_mission, campaign_race_exceptions,
+    SC2Mission, SC2Race,
+)
 from .locations import LocationType, lookup_location_id_to_type, lookup_location_id_to_flags
 from .options import LocationInclusion, MissionOrderScouting
 from . import SC2World
@@ -140,7 +142,7 @@ class SC2Manager(GameManager):
     mission_buttons: List[MissionButton] = []
     launching: Union[bool, int] = False  # if int -> mission ID
     refresh_from_launching = True
-    first_check = True
+    pending_redraw = True
     first_mission = ""
     button_colors: Dict[SC2Race, Tuple[float, float, float]] = {}
     ctx: SC2Context
@@ -218,7 +220,7 @@ class SC2Manager(GameManager):
             and not hovering_tooltip
             or not self.refresh_from_launching
             or self.last_data_out_of_date != self.ctx.data_out_of_date
-            or self.first_check
+            or self.pending_redraw
         )
         self.last_shown_tooltip = shown_tooltip
         if not needs_redraw:
@@ -246,7 +248,7 @@ class SC2Manager(GameManager):
 
         self.last_checked_locations = self.ctx.checked_locations.copy()
         self.last_items_received = sorted_items_received
-        self.first_check = False
+        self.pending_redraw = False
 
         self.mission_buttons = []
 
@@ -667,7 +669,7 @@ class SC2Manager(GameManager):
             return " [color=AF99EF](Progression)[/color]"
         if ItemClassification.useful & item_classification_key:
             return " [color=6D8BE8](Useful)[/color]"
-        if SC2World.settings.show_traps and ItemClassification.trap & item_classification_key:
+        if SC2World.settings.scouting_show_traps and ItemClassification.trap & item_classification_key:
             return " [color=FA8072](Trap)[/color]"
         return " [color=00EEEE](Filler)[/color]"
 

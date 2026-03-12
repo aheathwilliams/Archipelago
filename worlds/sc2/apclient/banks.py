@@ -211,10 +211,10 @@ def file_cleanup() -> None | Error[str]:
     bank_folder = user_paths.get_bank_folder()
     if isinstance(bank_folder, Error):
         return bank_folder
-    Path(f"{user_paths.get_bank_folder()}/{BANK_CORE_OPTIONS_FILE_NAME}.SC2Bank").unlink(missing_ok=True)
-    Path(f"{user_paths.get_bank_folder()}/{BANK_LOCATIONS_FILE_NAME}.SC2Bank").unlink(missing_ok=True)
-    Path(f"{user_paths.get_bank_folder()}/{BANK_TRADE_RECEIVE_FILE_NAME}.SC2Bank").unlink(missing_ok=True)
-    Path(f"{user_paths.get_bank_folder()}/{BANK_MESSAGES_FILE_NAME}.SC2Bank").unlink(missing_ok=True)
+    Path(f"{bank_folder}/{BANK_CORE_OPTIONS_FILE_NAME}.SC2Bank").unlink(missing_ok=True)
+    Path(f"{bank_folder}/{BANK_LOCATIONS_FILE_NAME}.SC2Bank").unlink(missing_ok=True)
+    Path(f"{bank_folder}/{BANK_TRADE_RECEIVE_FILE_NAME}.SC2Bank").unlink(missing_ok=True)
+    Path(f"{bank_folder}/{BANK_MESSAGES_FILE_NAME}.SC2Bank").unlink(missing_ok=True)
     return None
 
 

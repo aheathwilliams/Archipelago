@@ -7,13 +7,12 @@ from .mission_tables import (
     SC2Mission, SC2Campaign, MissionFlag, SC2Race, get_campaign_goal_priority,
     campaign_final_mission_locations, campaign_alt_final_mission_locations
 )
-from .tables import NovaPresenceOptions
 from .options import (
     ShuffleNoBuild, RequiredTactics, ShuffleCampaigns,
-    kerrigan_unit_available, TakeOverAIAllies, MissionOrder,
+    TakeOverAIAllies, MissionOrder,
     get_excluded_missions, get_enabled_campaigns, get_enabled_races,
     static_mission_orders,
-    TwoStartPositions, KeyMode, EnableMissionRaceBalancing, EnableRaceSwapVariants, NovaPresence,
+    TwoStartPositions, KeyMode, EnableMissionRaceBalancing, EnableRaceSwapVariants,
     WarCouncilNerfs, GrantStoryTech
 )
 from .mission_order.options import CustomMissionOrder
@@ -90,12 +89,9 @@ def adjust_mission_pools(world: 'SC2World', pools: SC2MOGenMissionPools) -> None
     grant_story_tech = world.options.grant_story_tech.value
     grant_story_levels = world.options.grant_story_levels.value
     war_council_nerfs = world.options.war_council_nerfs.value == WarCouncilNerfs.option_true
-    kerriganless = (
-        world.options.kerrigan_presence.value not in kerrigan_unit_available
-        or SC2Campaign.HOTS not in enabled_campaigns
-    )
     assert world.logic
-    nova_grant_story_tech = world.logic.nova_grant_story_tech
+    kerrigan_items_granted = grant_story_tech  # TODO (Snarky): revisit when handling NCO-only generation
+    nova_items_granted = grant_story_tech
     # General changes for standard tactics
     if world.options.required_tactics.value == RequiredTactics.option_standard:
         pools.move_mission(SC2Mission.SMASH_AND_GRAB, Difficulty.STARTER, Difficulty.EASY)
@@ -118,13 +114,14 @@ def adjust_mission_pools(world: 'SC2World', pools: SC2MOGenMissionPools) -> None
     if enabled_campaigns == {SC2Campaign.PROPHECY}:
         pools.move_mission(SC2Mission.A_SINISTER_TURN, Difficulty.MEDIUM, Difficulty.EASY)
 
-    # Don't start on Ghost of a Chance if it will require Nova items
-    if (grant_story_tech != GrantStoryTech.option_grant
-        and not nova_grant_story_tech 
-        and NovaPresenceOptions.GHOST_OF_A_CHANCE in world.options.nova_presence
-    ):
-        # Using NCO tech for this mission that must be acquired
-        pools.move_mission(SC2Mission.GHOST_OF_A_CHANCE, Difficulty.STARTER, Difficulty.MEDIUM)
+    # # TODO (Snarky): Make work with Hero Presence
+    # # Don't start on Ghost of a Chance if it will require Nova items
+    # if (grant_story_tech != GrantStoryTech.option_grant
+    #     and not nova_items_granted
+    #     and NovaPresenceOptions.GHOST_OF_A_CHANCE in world.options.nova_presence
+    # ):
+    #     # Using NCO tech for this mission that must be acquired
+    #     pools.move_mission(SC2Mission.GHOST_OF_A_CHANCE, Difficulty.STARTER, Difficulty.MEDIUM)
 
     # Cement Prophecy's mission order if it is the only campaign
     if (enabled_campaigns == {SC2Campaign.PROLOGUE}
@@ -138,21 +135,21 @@ def adjust_mission_pools(world: 'SC2World', pools: SC2MOGenMissionPools) -> None
         # Additional starter mission if player is granted story tech
         pools.move_mission(SC2Mission.ENEMY_WITHIN, Difficulty.EASY, Difficulty.STARTER)
         pools.move_mission(SC2Mission.TEMPLAR_S_RETURN, Difficulty.MEDIUM, Difficulty.STARTER)
-    if grant_story_tech == GrantStoryTech.option_grant or nova_grant_story_tech:
+    if grant_story_tech == GrantStoryTech.option_grant or nova_items_granted:
         # Additional starter mission if player is granted story tech, or Nova only appears in no-builds
         pools.move_mission(SC2Mission.THE_ESCAPE, Difficulty.MEDIUM, Difficulty.STARTER)
         pools.move_mission(SC2Mission.IN_THE_ENEMY_S_SHADOW, Difficulty.MEDIUM, Difficulty.STARTER)
     if not war_council_nerfs or grant_story_tech == GrantStoryTech.option_grant:
         pools.move_mission(SC2Mission.TEMPLAR_S_RETURN, Difficulty.MEDIUM, Difficulty.STARTER)
-    if (grant_story_tech == GrantStoryTech.option_grant and grant_story_levels) or kerriganless:
+    if (grant_story_tech == GrantStoryTech.option_grant and grant_story_levels) or kerrigan_items_granted:
         # The player has, all the stuff he needs, provided under these settings
         pools.move_mission(SC2Mission.SUPREME, Difficulty.MEDIUM, Difficulty.STARTER)
         pools.move_mission(SC2Mission.THE_INFINITE_CYCLE, Difficulty.HARD, Difficulty.STARTER)
         pools.move_mission(SC2Mission.CONVICTION, Difficulty.MEDIUM, Difficulty.STARTER)
-    if  (grant_story_tech != GrantStoryTech.option_grant and not nova_grant_story_tech 
-        and NovaPresenceOptions.GHOST_OF_A_CHANCE in world.options.nova_presence):
-        # Using NCO tech for this mission that must be acquired
-        pools.move_mission(SC2Mission.GHOST_OF_A_CHANCE, Difficulty.STARTER, Difficulty.MEDIUM)
+    # if  (grant_story_tech != GrantStoryTech.option_grant and not nova_items_granted 
+    #     and NovaPresenceOptions.GHOST_OF_A_CHANCE in world.options.nova_presence):
+    #     # Using NCO tech for this mission that must be acquired
+    #     pools.move_mission(SC2Mission.GHOST_OF_A_CHANCE, Difficulty.STARTER, Difficulty.MEDIUM)
     if world.options.take_over_ai_allies.value == TakeOverAIAllies.option_true:
         pools.move_mission(SC2Mission.HARBINGER_OF_OBLIVION, Difficulty.MEDIUM, Difficulty.STARTER)
 
