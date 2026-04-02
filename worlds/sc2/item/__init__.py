@@ -99,6 +99,7 @@ class ZergItemType(ItemTypeEnum):
     Mutation_4 = "Mutation", 12
     Progressive = "Progressive Upgrade", 13
     Mutation_5 = "Mutation", 14
+    Mutation_6 = "Mutation", 15
 
 
 class ProtossItemType(ItemTypeEnum):

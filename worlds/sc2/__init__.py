@@ -160,7 +160,7 @@ class SC2World(World):
         # TODO (Snarky): Make work with Hero Presence
         # if (
         #     NovaPresenceOptions.GHOST_OF_A_CHANCE_AUTO in self.options.nova_presence
-        #     and MissionFlag.Nova in self.custom_mission_order.get_used_flags() 
+        #     and MissionFlag.Nova in self.custom_mission_order.get_used_flags()
         #     and not self.logic.nova_items_granted
         # ):
         #     # check if Nova is used anywhere and just modify the option
@@ -384,47 +384,47 @@ def pack_hero_presence(presence: dict[SC2Campaign, dict[SC2Race, HeroFlag]]) -> 
     return result
 
 
-def calculate_hero_presence(presence: HeroPresence, heroes: HeroFlag) -> dict[SC2Campaign, dict[SC2Race, HeroFlag]]:
-        races = [race for race in SC2Race if race != SC2Race.ANY]
-        campaigns = [campaign for campaign in SC2Campaign if campaign != SC2Campaign.GLOBAL]
-        kerrigan_flag = HeroFlag.KERRIGAN if HeroOptions.KERRIGAN in heroes else HeroFlag.NONE
-        nova_flag = HeroFlag.NOVA if HeroOptions.NOVA in heroes else HeroFlag.NONE
-        artanis_flag = HeroFlag.ARTANIS if HeroOptions.ARTANIS in heroes else HeroFlag.NONE
-        all_flag = kerrigan_flag | nova_flag | artanis_flag
-        race_flag = {
-            SC2Race.ZERG: kerrigan_flag,
-            SC2Race.TERRAN: nova_flag,
-            SC2Race.PROTOSS: artanis_flag,
-        }
-        result = {campaign: {race: HeroFlag.NONE for race in races} for campaign in campaigns}
-        if presence == HeroPresence.option_anywhere:
-            for campaign in campaigns:
-                for race in races:
-                    result[campaign][race] = all_flag
-        elif presence == HeroPresence.option_same_race:
-            for campaign in campaigns:
-                for race in races:
-                    result[campaign][race] = race_flag[race]
-        elif presence == HeroPresence.option_original_race:
+def calculate_hero_presence(presence: int, heroes: set[str]) -> dict[SC2Campaign, dict[SC2Race, HeroFlag]]:
+    races = [race for race in SC2Race if race != SC2Race.ANY]
+    campaigns = [campaign for campaign in SC2Campaign if campaign != SC2Campaign.GLOBAL]
+    kerrigan_flag = HeroFlag.KERRIGAN if HeroOptions.KERRIGAN in heroes else HeroFlag.NONE
+    nova_flag = HeroFlag.NOVA if HeroOptions.NOVA in heroes else HeroFlag.NONE
+    artanis_flag = HeroFlag.ARTANIS if HeroOptions.ARTANIS in heroes else HeroFlag.NONE
+    all_flag = kerrigan_flag | nova_flag | artanis_flag
+    race_flag = {
+        SC2Race.ZERG: kerrigan_flag,
+        SC2Race.TERRAN: nova_flag,
+        SC2Race.PROTOSS: artanis_flag,
+    }
+    result = {campaign: {race: HeroFlag.NONE for race in races} for campaign in campaigns}
+    if presence == HeroPresence.option_anywhere:
+        for campaign in campaigns:
             for race in races:
-                result[SC2Campaign.HOTS][race] = kerrigan_flag
-                result[SC2Campaign.WOL][race] = nova_flag
-                result[SC2Campaign.NCO][race] = nova_flag
-                result[SC2Campaign.LOTV][race] = artanis_flag
-                result[SC2Campaign.PROLOGUE][race] = artanis_flag
-                result[SC2Campaign.PROPHECY][race] = artanis_flag
-        elif presence == HeroPresence.option_vanilla:
-            result[SC2Campaign.HOTS][SC2Race.ZERG] = kerrigan_flag
-            result[SC2Campaign.NCO][SC2Race.TERRAN] = nova_flag
-        elif presence == HeroPresence.option_vanilla_raceswap:
+                result[campaign][race] = all_flag
+    elif presence == HeroPresence.option_same_race:
+        for campaign in campaigns:
             for race in races:
-                result[SC2Campaign.HOTS][race] = race_flag[race]
-                result[SC2Campaign.NCO][race] = race_flag[race]
-        elif presence == HeroPresence.option_vanilla_original_race:
-            for race in races:
-                result[SC2Campaign.HOTS][race] = kerrigan_flag
-                result[SC2Campaign.NCO][race] = nova_flag
-        return result
+                result[campaign][race] = race_flag[race]
+    elif presence == HeroPresence.option_original_race:
+        for race in races:
+            result[SC2Campaign.HOTS][race] = kerrigan_flag
+            result[SC2Campaign.WOL][race] = nova_flag
+            result[SC2Campaign.NCO][race] = nova_flag
+            result[SC2Campaign.LOTV][race] = artanis_flag
+            result[SC2Campaign.PROLOGUE][race] = artanis_flag
+            result[SC2Campaign.PROPHECY][race] = artanis_flag
+    elif presence == HeroPresence.option_vanilla:
+        result[SC2Campaign.HOTS][SC2Race.ZERG] = kerrigan_flag
+        result[SC2Campaign.NCO][SC2Race.TERRAN] = nova_flag
+    elif presence == HeroPresence.option_vanilla_raceswap:
+        for race in races:
+            result[SC2Campaign.HOTS][race] = race_flag[race]
+            result[SC2Campaign.NCO][race] = race_flag[race]
+    elif presence == HeroPresence.option_vanilla_original_race:
+        for race in races:
+            result[SC2Campaign.HOTS][race] = kerrigan_flag
+            result[SC2Campaign.NCO][race] = nova_flag
+    return result
 
 
 def _get_column_display(index: int, single_row_layout: bool) -> str:
@@ -481,7 +481,7 @@ def create_and_flag_explicit_item_locks_and_excludes(world: SC2World) -> list[Fi
         if max_count and count > max_count:
             return max_count
         return count
-    
+
     auto_excludes = Counter({item_name: 1 for item_name in item_groups.legacy_items})
     if world.options.exclude_overpowered_items.value == ExcludeOverpoweredItems.option_true:
         for item_name in item_groups.overpowered_items:
@@ -722,6 +722,7 @@ def flag_mission_based_item_excludes(world: SC2World, item_list: list[FilterItem
     remove_kerrigan_items = (len(kerrigan_missions) <= 1) and not kerrigan_build_missions
     remove_nova_items =  (len(nova_missions) <= 1) and not nova_build_missions
     remove_artanis_items = (len(artanis_missions) <= 1) and not artanis_build_missions
+    assert world.logic is not None
     world.logic.kerrigan_items_granted = remove_kerrigan_items
     world.logic.kerrigan_levels_granted = remove_kerrigan_items
     world.logic.nova_items_granted = remove_nova_items
@@ -843,7 +844,7 @@ def flag_allowed_orphan_items(world: SC2World, item_list: list[FilterItem]) -> N
                 item.flags &= ~ItemFilterFlags.FilterExcluded
     if SC2Mission.EVIL_AWOKEN in missions and world.options.required_tactics == RequiredTactics.option_standard:
         for item in item_list:
-            if item.name in (item_names.STALKER_PHASE_REACTOR, item_names.STALKER_INSTIGATOR_SLAYER_DISINTEGRATING_PARTICLES, item_names.STALKER_INSTIGATOR_SLAYER_PARTICLE_REFLECTION):
+            if item.name in (item_names.STALKER_PHASE_REACTOR, item_names.STALKER_DISINTEGRATING_PARTICLES, item_names.STALKER_PARTICLE_REFLECTION):
                 item.flags |= ItemFilterFlags.AllowedOrphan
 
 
@@ -942,7 +943,7 @@ def flag_start_unit(world: SC2World, item_list: list[FilterItem], starter_unit: 
         #         support_item.flags |= ItemFilterFlags.StartInventory
         #     if item_names.NOVA_JUMP_SUIT_MODULE in possible_starter_items:
         #         possible_starter_items[item_names.NOVA_JUMP_SUIT_MODULE].flags |= ItemFilterFlags.StartInventory
-        # if ( MissionFlag.Nova in first_mission.flags 
+        # if ( MissionFlag.Nova in first_mission.flags
         #     and (
         #         MissionFlag.Terran in first_mission.flags and NovaPresenceOptions.NCO_TERRAN in world.options.nova_presence
         #             or MissionFlag.Zerg in first_mission.flags and NovaPresenceOptions.NCO_ZERG in world.options.nova_presence
@@ -1184,7 +1185,7 @@ def fill_pool_with_kerrigan_levels(world: SC2World, item_pool: list[StarcraftIte
         or (world.options.grant_story_levels and not world.logic.kerrigan_build_missions)
     ):
         return
-    
+
     def add_kerrigan_level_items(level_amount: int, item_amount: int):
         name = f"{level_amount} Kerrigan Level"
         if level_amount > 1:

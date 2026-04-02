@@ -162,9 +162,14 @@ parent_present[parent_names.JOTUN_CONDITION] = MercenariesNotLinkedOrItem(item_n
 
 # Zerg
 parent_present[parent_names.ANY_NYDUS_WORM] = AnyOf((item_names.NYDUS_WORM, item_names.ECHIDNA_WORM), item_names.NYDUS_WORM)
+parent_present[parent_names.SCOURGE_SOURCE] = AnyOf((item_names.SCOURGE, item_names.SPAWN_SCOURGE), item_names.SCOURGE)
 parent_present[parent_names.BANELING_SOURCE] = AnyOf(
-    (item_names.BANELING, item_names.KERRIGAN_SPAWN_BANELINGS),
+    (item_names.BANELING, item_names.KERRIGAN_SPAWN_BANELINGS, item_names.SPAWN_BANELINGS),
     item_names.BANELING,
+)
+parent_present[parent_names.CREEP_TUMOR_SOURCE] = AnyOf(
+    (item_names.SWARM_QUEEN, item_names.OVERSEER, item_names.ECHIDNA_WORM),
+    item_names.SWARM_QUEEN,
 )
 parent_present[parent_names.HIVE_QUEEN_OR_SWARM_QUEEN] = AnyOf((item_names.HIVE_QUEEN, item_names.SWARM_QUEEN), main_item=item_names.SWARM_QUEEN)
 parent_present[parent_names.INFESTED_UNITS] = AnyOf(item_groups.infterr_units, display_string='Infested')
@@ -188,6 +193,9 @@ parent_present[parent_names.ZERG_OUROBOUROS_CONDITION] = AnyOfGroupAndOneOtherIt
     (item_names.ZERGLING, item_names.ROACH, item_names.HYDRALISK, item_names.ABERRATION),
     item_names.ECHIDNA_WORM
 )
+parent_present[parent_names.MORPH_FROM_HYDRALISK] = AnyOf((item_names.LURKER, item_names.IMPALER))
+parent_present[parent_names.MORPH_GREATER_SPIRE] = AnyOf(
+    (item_names.BROOD_LORD, item_names.GUARDIAN, item_names.DEVOURER, item_names.VIPER))
 parent_present[parent_names.DEVOURING_ONES_CONDITION] = MercenariesNotLinkedOrItem(item_names.ZERGLING)
 parent_present[parent_names.HUNTER_KILLERS_CONDITION] = MercenariesNotLinkedOrItem(item_names.HYDRALISK)
 parent_present[parent_names.TORRASQUE_MERC_CONDITION] = MercenariesNotLinkedOrItem(item_names.ULTRALISK)
@@ -272,6 +280,19 @@ parent_present[parent_names.PROTOSS_ATTACKING_BUILDING] = AnyOf(
 parent_present[parent_names.MOTHERSHIP] = AnyOf(
     (item_names.MOTHERSHIP_AIUR, item_names.MOTHERSHIP_PURIFIER, item_names.MOTHERSHIP_TALDARIM),
     main_item=item_names.MOTHERSHIP_TALDARIM,
+)
+parent_present[parent_names.FLEET_BEACON_UNITS] = AnyOf(
+    (item_names.CARRIER, item_names.SKYLORD, item_names.TRIREME, item_names.TEMPEST, item_names.ARBITER,
+    item_names.MOTHERSHIP_AIUR, item_names.MOTHERSHIP_PURIFIER, item_names.MOTHERSHIP_TALDARIM)
+)
+parent_present[parent_names.ROBOTICS_BAY_UNITS] = AnyOf(
+    (item_names.COLOSSUS, item_names.WRATHWALKER, item_names.REAVER)
+)
+parent_present[parent_names.TEMPLAR_ARCHIVE_UNITS] = AnyOf(
+    (item_names.HIGH_TEMPLAR, item_names.SIGNIFIER, item_names.ASCENDANT, item_names.DARK_ARCHON)
+)
+parent_present[parent_names.DARK_SHRINE_UNITS] = AnyOf(
+    (item_names.DARK_TEMPLAR, item_names.AVENGER, item_names.BLOOD_HUNTER)
 )
 
 

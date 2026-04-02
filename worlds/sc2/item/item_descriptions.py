@@ -131,7 +131,7 @@ item_descriptions = {
     item_names.MEDIVAC: "Air transport. Heals nearby biological units.",
     item_names.WRAITH: "Highly mobile flying unit. Excellent at surgical strikes.",
     item_names.VIKING: inspect.cleandoc("""
-        Durable support flyer. Loaded with strong anti-capital air missiles. 
+        Durable support flyer. Loaded with strong anti-capital air missiles.
         Can switch into Assault Mode to attack ground units.
     """),
     item_names.BANSHEE: "Tactical-strike aircraft.",
@@ -139,21 +139,21 @@ item_descriptions = {
     item_names.GHOST:
         "Infiltration unit. Can use Snipe and Cloak abilities. Can also call down Tactical Nukes.",
     item_names.SPECTRE: inspect.cleandoc("""
-        Infiltration unit. Can use Ultrasonic Pulse, Psionic Lash, and Cloak. 
+        Infiltration unit. Can use Ultrasonic Pulse, Psionic Lash, and Cloak.
         Can also call down Tactical Nukes.
     """),
     item_names.THOR: "Heavy assault mech.",
     item_names.LIBERATOR: inspect.cleandoc("""
-        Artillery fighter. Loaded with missiles that deal area damage to enemy air targets. 
+        Artillery fighter. Loaded with missiles that deal area damage to enemy air targets.
         Can switch into Defender Mode to provide siege support.
     """),
     item_names.VALKYRIE: inspect.cleandoc("""
-        Advanced anti-aircraft fighter. 
+        Advanced anti-aircraft fighter.
         Able to use cluster missiles that deal area damage to air targets.
     """),
     item_names.WIDOW_MINE: inspect.cleandoc("""
-        Robotic mine. Launches missiles at nearby enemy units while burrowed. 
-        Attacks deal splash damage in a small area around the target. 
+        Robotic mine. Launches missiles at nearby enemy units while burrowed.
+        Attacks deal splash damage in a small area around the target.
         Widow Mine is revealed when Sentinel Missile is on cooldown.
     """),
     item_names.CYCLONE: "Mobile assault vehicle. Can use Lock On to quickly fire while moving.",
@@ -163,7 +163,7 @@ item_descriptions = {
         "General-purpose infantry. Can be outfitted with weapons for different combat situations.",
     item_names.PRIDE_OF_AUGUSTRGRAD: "Powerful Royal Guard warship.",
     item_names.SKY_FURY: inspect.cleandoc("""
-        Durable Royal Guard support flyer. Loaded with strong anti-capital air missiles. 
+        Durable Royal Guard support flyer. Loaded with strong anti-capital air missiles.
         Can switch into Assault Mode to attack ground units.
     """),
     item_names.SHOCK_DIVISION: "Royal Guard heavy tank. Long-range artillery in Siege Mode.",
@@ -174,7 +174,7 @@ item_descriptions = {
     item_names.BULWARK_COMPANY: "Royal Guard heavy-fire support unit.",
     item_names.FIELD_RESPONSE_THETA: "Royal Guard support trooper. Heals nearby biological units.",
     item_names.EMPERORS_GUARDIAN: inspect.cleandoc("""
-        Royal Guard artillery fighter. Loaded with missiles that deal area damage to enemy air targets. 
+        Royal Guard artillery fighter. Loaded with missiles that deal area damage to enemy air targets.
         Can switch into Defender Mode to provide siege support.
     """),
     item_names.NIGHT_HAWK: "Royal Guard highly mobile flying unit. Excellent at surgical strikes.",
@@ -199,8 +199,8 @@ item_descriptions = {
     item_names.SCV_ADVANCED_CONSTRUCTION: "Multiple SCVs can construct a structure, reducing its construction time.",
     item_names.SCV_DUAL_FUSION_WELDERS: "SCVs repair twice as fast.",
     item_names.SCV_CONSTRUCTION_JUMP_JETS: "Allows SCVs to jump up and down cliffs.",
-    item_names.SCV_RESOURCEFUL: "SCV repairs no longer cost resources.",
     item_names.SCV_CAUTERIZER: "Allows SCVs to repair non-mechanical units.",
+    item_names.SCV_RESOURCEFUL: "SCV repairs no longer cost resources.",
     item_names.PROGRESSIVE_FIRE_SUPPRESSION_SYSTEM: inspect.cleandoc("""
         Level 1: While on low health, Terran structures are repaired to half health instead of burning down.
         Level 2: Terran structures are repaired to full health instead of half health.
@@ -280,21 +280,21 @@ item_descriptions = {
     item_names.GOLIATH_OPTIMIZED_LOGISTICS: "Increases Goliath training speed.",
     item_names.DIAMONDBACK_HYPERFLUXOR: "Increases Diamondback attack speed.",
     item_names.DIAMONDBACK_BURST_CAPACITORS: inspect.cleandoc("""
-        While not attacking, the Diamondback charges its weapon. 
+        While not attacking, the Diamondback charges its weapon.
         The next attack does 10 additional damage.
     """),
     item_names.DIAMONDBACK_RESOURCE_EFFICIENCY: _get_resource_efficiency_desc(item_names.DIAMONDBACK),
     item_names.SIEGE_TANK_JUMP_JETS: inspect.cleandoc("""
-        Repositions Siege Tank to a target location. 
-        Can be used in either mode and to jump up and down cliffs. 
+        Repositions Siege Tank to a target location.
+        Can be used in either mode and to jump up and down cliffs.
     """),
     item_names.SIEGE_TANK_SPIDER_MINES: inspect.cleandoc("""
-        Allows Siege Tanks to lay Spider Mines. 
+        Allows Siege Tanks to lay Spider Mines.
         Lays 3 Spider Mines at once. 3 charges.
     """),
     item_names.SIEGE_TANK_SMART_SERVOS: SMART_SERVOS_DESCRIPTION,
     item_names.SIEGE_TANK_GRADUATING_RANGE: inspect.cleandoc("""
-        Increases the Siege Tank's attack range by 1 every 3 seconds while in Siege Mode, 
+        Increases the Siege Tank's attack range by 1 every 3 seconds while in Siege Mode,
         up to a maximum of 5 additional range.
     """),
     item_names.SIEGE_TANK_LASER_TARGETING_SYSTEM: LASER_TARGETING_SYSTEMS_DESCRIPTION,
@@ -317,7 +317,7 @@ item_descriptions = {
         Allows Warhounds to enter Brawler mode.
         Grants damage reduction and a stronger melee attack.
         Deactivates the Railgun.
-    
+
     """),
     item_names.WARHOUND_JUMP_JETS:inspect.cleandoc("""
         Allows Warhounds to jump towards enemies.
@@ -432,13 +432,13 @@ item_descriptions = {
     """),
     item_names.BATTLECRUISER_CLOAK: CLOAK_DESCRIPTION_TEMPLATE.format("Battlecruisers"),
     item_names.BATTLECRUISER_ATX_LASER_BATTERY: inspect.cleandoc("""
-        Battlecruisers can attack while moving, 
+        Battlecruisers can attack while moving,
         do the same damage to both ground and air targets, and fire faster.
     """),
     item_names.BATTLECRUISER_OPTIMIZED_LOGISTICS: "Increases Battlecruiser training speed.",
     item_names.BATTLECRUISER_INTERNAL_TECH_MODULE: INTERNAL_TECH_MODULE_DESCRIPTION_TEMPLATE.format("Battlecruisers", "Starport"),
     item_names.GHOST_EMP_ROUNDS: inspect.cleandoc("""
-        Spell. Does 100 damage to shields and drains all energy from units in the targeted area. 
+        Spell. Does 100 damage to shields and drains all energy from units in the targeted area.
         Cloaked units hit by EMP are revealed for a short time.
     """),
     item_names.GHOST_LOCKDOWN: "Spell. Stuns a target mechanical unit for a long time.",
@@ -659,6 +659,7 @@ item_descriptions = {
     item_names.HYDRALISK_FRENZY: "Allows Hydralisks to use the Frenzy ability, which increases their attack speed by 50%.",
     item_names.HYDRALISK_ANCILLARY_CARAPACE: "Hydralisks gain +20 health.",
     item_names.HYDRALISK_GROOVED_SPINES: "Hydralisks gain +1 range.",
+    item_names.SPAWN_BANELINGS: "One Baneling Nest will periodically spawn temporary Banelings.",
     item_names.BANELING_CORROSIVE_ACID: "Increases the damage banelings deal to their primary target. Splash damage remains the same.",
     item_names.BANELING_RUPTURE: "Increases the splash radius of baneling attacks.",
     item_names.BANELING_REGENERATIVE_ACID: "Banelings will heal nearby friendly units when they explode.",
@@ -679,6 +680,7 @@ item_descriptions = {
     item_names.SCOURGE_VIRULENT_SPORES: "Scourge will deal splash damage.",
     item_names.SCOURGE_RESOURCE_EFFICIENCY: _get_resource_efficiency_desc(item_names.SCOURGE),
     item_names.SCOURGE_SWARM_SCOURGE: "An extra Scourge will be built from each egg at no additional cost.",
+    item_names.SPAWN_SCOURGE: "One Spire will periodically spawn temporary Scourges.",
     item_names.ZERGLING_SHREDDING_CLAWS: "Zergling attacks will temporarily reduce their target's armor to 0.",
     item_names.ROACH_GLIAL_RECONSTITUTION: "Increases Roach movement speed.",
     item_names.ROACH_ORGANIC_CARAPACE: "Increases Roach health by +25.",
@@ -713,8 +715,12 @@ item_descriptions = {
     item_names.IMPALER_DISTRIBUTED_ATTACK: "Allows Impalers to distribute their attacks across multiple targets.",
     item_names.IMPALER_TENTACLE_EXTENSIONS: "Allows Piercing Tentacle to hit an additional nearby secondary target for reduced damage.",
     item_names.IMPALER_DEEP_TUNNEL: _ability_desc("Impalers", "Deep Tunnel", "allows them to burrow to any visible location on the map covered in creep"),
-    item_names.LURKER_SEISMIC_SPINES: "Lurkers gain +6 range.",
+    item_names.LURKER_SEISMIC_SPINES: "Lurkers gain +2 range.",
     item_names.LURKER_ADAPTED_SPINES: "Lurkers deal increased damage to non-light targets.",
+    item_names.LURKER_PRESSURIZED_RELEASE: "Lurkers gain +1 range, and an additional +2 range while on creep.",
+    item_names.LURKER_CARAPACE: "Lurkers gain +100 temporary life for 10 seconds on burrowing and unburrowing.",
+    item_names.LURKER_RAPID_MORPH: "Lurkers morph instantly from Hydralisks, and 15 seconds faster from Morphlings.",
+    item_names.LURKER_SONAR_GLANDS: "Lurkers gain detection and +4 sight range while burrowed.",
     item_names.RAVAGER_POTENT_BILE: "Ravager Corrosive Bile deals an additional +40 damage.",
     item_names.RAVAGER_BLOATED_BILE_DUCTS: "Ravager Corrosive Bile hits a much larger area.",
     item_names.RAVAGER_DEEP_TUNNEL: _ability_desc("Ravagers", "Deep Tunnel", "allows them to burrow to any visible location on the map"),
@@ -751,7 +757,7 @@ item_descriptions = {
     item_names.ABERRATION_RESOURCE_EFFICIENCY: _get_resource_efficiency_desc(item_names.ABERRATION),
     item_names.ABERRATION_PROGRESSIVE_BANELING_LAUNCH: inspect.cleandoc("""
         Level 1: Allows Aberrations to periodically throw generated Banelings at air targets.
-        Level 2: Can store up to 3 Banelings. Can consume Banelings to recharge faster. Thrown Banelings benefit from Baneling upgrades. 
+        Level 2: Can store up to 3 Banelings. Can consume Banelings to recharge faster. Thrown Banelings benefit from Baneling upgrades.
     """),
     item_names.CORRUPTOR_MONSTROUS_RESILIENCE: "Corruptors gain +100 life.",
     item_names.CORRUPTOR_CONSTRUCT_REGENERATION: "Corruptors gain increased life regeneration.",
@@ -761,8 +767,12 @@ item_descriptions = {
     item_names.PRIMAL_IGNITER_CONCENTRATED_FIRE: "Primal Igniters deal +15 damage vs light armor.",
     item_names.PRIMAL_IGNITER_PRIMAL_TENACITY: "Primal Igniters gain +100 health and +1 armor.",
     item_names.INFESTED_SCV_BUILD_CHARGES: "Starting Infested SCV charges increased to 3. Maximum charges increased to 5.",
+    item_names.INFESTED_SCV_CAUTERIZER: "Allows Infested SCVs to repair non-mechanical units.",
+    item_names.INFESTED_SCV_RESOURCEFUL: "Infested SCV repairs no longer cost resources.",
     item_names.INFESTED_MARINE_PLAGUED_MUNITIONS: "Infested Marines deal an extra 50 damage over 15 seconds to targets they attack.",
     item_names.INFESTED_MARINE_RETINAL_AUGMENTATION: "Infested Marines gain +1 range.",
+    item_names.INFESTED_MARINE_ENDURING_STRAIN: "Infested Marines and Infested Troopers last 30 seconds longer.",
+    item_names.INFESTED_MARINE_LEG_ENHANCEMENTS: "Infested Marines and Infested Troopers move faster while off-creep.",
     item_names.INFESTED_BUNKER_CALCIFIED_ARMOR: "Infested Bunkers gain +3 armor.",
     item_names.INFESTED_BUNKER_REGENERATIVE_PLATING: "Infested Bunkers gain increased life regeneration while rooted.",
     item_names.INFESTED_BUNKER_ENGORGED_BUNKERS: "Infested Bunkers gain +2 cargo slots. Infested Trooper spawn cooldown is reduced by 20%.",
@@ -775,7 +785,7 @@ item_descriptions = {
     item_names.BILE_LAUNCHER_ARTILLERY_DUCTS: "Increases Bile Launcher range by +8.",
     item_names.BILE_LAUNCHER_RAPID_BOMBARMENT: "Bile Launchers attack 40% faster.",
     item_names.NYDUS_WORM_ECHIDNA_WORM_SUBTERRANEAN_SCALES: f"Increases {DISPLAY_NAME_WORMS} maximum health by 250 and armor by 1.",
-    item_names.NYDUS_WORM_ECHIDNA_WORM_JORMUNGANDR_STRAIN: f"Removes emerge time for {DISPLAY_NAME_WORMS}, and allows them to be salvaged to return the resources spent on them.", 
+    item_names.NYDUS_WORM_ECHIDNA_WORM_JORMUNGANDR_STRAIN: f"Removes emerge time for {DISPLAY_NAME_WORMS}, and allows them to be salvaged to return the resources spent on them.",
     item_names.NYDUS_WORM_RAVENOUS_APPETITE: "Allows Nydus Worms to unload and load units nearly instantly.",
     item_names.NYDUS_WORM_ECHIDNA_WORM_RESOURCE_EFFICIENCY: _get_resource_efficiency_desc(DISPLAY_NAME_WORMS),
     item_names.ECHIDNA_WORM_OUROBOROS_STRAIN: "Allows Echidna Worms to train a limited assortment of combat units (Zerglings, Roaches, Hydralisks, and Aberrations) at a reduced time and cost.",
@@ -810,9 +820,12 @@ item_descriptions = {
     item_names.INFESTED_LIBERATOR_FRIGHTFUL_FLESHWELDER: _get_resource_efficiency_desc(item_names.INFESTED_LIBERATOR),
     item_names.ZERG_EXCAVATING_CLAWS: "Increases movement speed of uprooted Zerg structures, especially off creep. Also increases root speed.",
     item_names.HIVE_CLUSTER_MATURATION: "Lairs are replaced with Hives, and Hatcheries can now upgrade directly to Hives at the Lair's original cost.",
+    item_names.HYDRALISK_DEN_MATURATION: "Hydralisk Dens are replaced with Greater Hydralisk Dens, and Drones can now build Greater Hydralisk Dens directly.",
+    item_names.SPIRE_MATURATION: "Spires are replaced with Greater Spires, and Drones can now build Greater Spires directly.",
     item_names.MACROSCOPIC_RECUPERATION: "Zerg structures regenerate health rapidly while on creep and out of combat. Does not apply to uprooted structures, or structures with the Mechanical tag.",
     item_names.BIOMECHANICAL_STOCKPILING: "Infested Factories and Starports can store 3 additional unit charges.",
     item_names.BROODLING_SPORE_SATURATION: "Zerg buildings release twice as many broodlings on death. Zerg defensive structures release 4 broodlings on death.",
+    item_names.SPAWN_SPLITTERLINGS: "Zerg buildings release splitterlings alongside broodlings on death.",
     item_names.UNRESTRICTED_MUTATION: "Zerg Mercenary units are no longer limited by charges.",
     item_names.CELL_DIVISION: "Adds additional units to Zerg Mercenary calldowns.",
     item_names.EVOLUTIONARY_LEAP: "Halves the initial cooldown for all Zerg Mercenaries.",
@@ -845,6 +858,7 @@ item_descriptions = {
     item_names.KERRIGAN_MEND: "Kerrigan heals for 150 life and heals nearby friendly units for 50 life. An additional +50% life is healed over 15 seconds.",
     item_names.TWIN_DRONES: "Drones morph in groups of two at no additional cost and require less supply.",
     item_names.MALIGNANT_CREEP: "Your units and structures gain increased life regeneration and 30% increased attack speed while on creep. Creep Tumors also spread creep faster and farther.",
+    item_names.SUBMERGED_TUMORS: "Your creep tumors are undetectable.",
     item_names.VESPENE_EFFICIENCY: "Extractors produce Vespene gas 25% faster.",
     item_names.ZERG_CREEP_STOMACH: "Zerg buildings no longer take damage off-creep. Defensive structures can now root off-creep.",
     item_names.KERRIGAN_INFEST_BROODLINGS: "Enemies damaged by Kerrigan become infested and will spawn Broodlings with timed life if killed quickly.",
@@ -944,6 +958,7 @@ item_descriptions = {
     item_names.PHOTON_CANNON: "Protoss defensive structure. Can attack ground and air units.",
     item_names.KHAYDARIN_MONOLITH: "Advanced Protoss defensive structure. Has superior range and damage, but is very expensive and attacks slowly.",
     item_names.SHIELD_BATTERY: "Protoss defensive structure. Restores shields to nearby friendly units and structures.",
+    item_names.PROBE_NERAZIM_COATING: "Probes are permanently cloaked.",
     item_names.SUPPLICANT_BLOOD_SHIELD: "Increases the armor value of Supplicant shields.",
     item_names.SUPPLICANT_SOUL_AUGMENTATION: "Increases Supplicant max shields by +25.",
     item_names.SUPPLICANT_ENDLESS_SERVITUDE: "Increases Supplicant shield regeneration rate.",
@@ -951,8 +966,8 @@ item_descriptions = {
     item_names.ADEPT_SHOCKWAVE: "When Adepts deal a finishing blow, their projectiles can jump onto 2 additional targets.",
     item_names.ADEPT_RESONATING_GLAIVES: "Increases Adept attack speed.",
     item_names.ADEPT_PHASE_BULWARK: "Increases Adept shield maximum by +50.",
-    item_names.STALKER_INSTIGATOR_SLAYER_DISINTEGRATING_PARTICLES: "Increases weapon damage of Stalkers, Instigators, and Slayers.",
-    item_names.STALKER_INSTIGATOR_SLAYER_PARTICLE_REFLECTION: "Attacks fired by Stalkers, Instigators, and Slayers have a chance to bounce to additional targets for reduced damage.",
+    item_names.STALKER_DISINTEGRATING_PARTICLES: "Increases weapon damage of Stalkers.",
+    item_names.STALKER_PARTICLE_REFLECTION: "Attacks fired by Stalkers have a chance to bounce to additional targets for reduced damage.",
     item_names.INSTIGATOR_BLINK_OVERDRIVE: "Instigators gain +2 maximum blink charges and +1 blink range.",
     item_names.INSTIGATOR_RECONSTRUCTION: "Instigators gain the Reconstruction ability, allowing them to be reconstructed on death with a 240 seconds cooldown. Using Blink reduces the cooldown.",
     item_names.DRAGOON_CONCENTRATED_ANTIMATTER: "Dragoons deal increased damage.",
@@ -1038,6 +1053,7 @@ item_descriptions = {
     item_names.STALWART_REINTEGRATED_FRAMEWORK: "Increases the movement speed of Stalwarts.",
     item_names.STALWART_STABILIZED_ELECTRODES: "Allows Stalwarts to attack while moving, and increases attack range by +1.",
     item_names.STALWART_LATTICED_SHIELDING: "Increases Stalwart max shields by +50.",
+    item_names.STALWART_SOLARITE_SCREEN: "Hardened Shields reduce damage to 5.",
     item_names.DISRUPTOR_CLOAKING_MODULE: "Disruptors are permanently cloaked.",
     item_names.DISRUPTOR_PERFECTED_POWER: "Allows Purification Nova to hit air units. Bonus damage to shields is now baseline for enemies (friendly damage unaffected).",
     item_names.DISRUPTOR_RESTRAINED_DESTRUCTION: "Purification Nova does 50% reduced damage to friendly units and structures.",
@@ -1073,18 +1089,33 @@ item_descriptions = {
     item_names.ENERGIZER_FORGED_CHASSIS: "Increases Energizer Life by +20.",
     item_names.HAVOC_DETECT_WEAKNESS: "Havocs' Target Lock gives an additional +15% damage bonus.",
     item_names.HAVOC_BLOODSHARD_RESONANCE: "Havocs gain increased range for Squad Sight, Target Lock, and Force Field.",
-    item_names.ZEALOT_SENTINEL_CENTURION_LEG_ENHANCEMENTS: "Zealots, Sentinels, and Centurions gain increased movement speed.",
-    item_names.ZEALOT_SENTINEL_CENTURION_SHIELD_CAPACITY: "Zealots, Sentinels, and Centurions gain +30 maximum shields.",
+    item_names.ZEALOT_LEG_ENHANCEMENTS: "Zealots gain increased movement speed.",
+    item_names.ZEALOT_SHIELD_CAPACITY: "Zealots gain +30 maximum shields. Additionally, they gain +2 shield armor while using Whirlwind.",
     item_names.ZEALOT_WHIRLWIND: "Zealot War Council ability.\nGives Zealots the whirlwind ability, dealing damage in an area over 3 seconds.",
     item_names.CENTURION_RESOURCE_EFFICIENCY: "Centurion War Council upgrade.\n" + _get_resource_efficiency_desc(
         item_names.CENTURION),
+    item_names.CENTURION_VORAZUNS_TEACHINGS: "Cloaks the Centurion for 5 seconds after using Darkcoil.",
+    item_names.CENTURION_QUANTUM_DODGE: "Centurions dodge every 4th instance of damage.",
     item_names.SENTINEL_RESOURCE_EFFICIENCY: "Sentinel War Council upgrade.\n" + _get_resource_efficiency_desc(
         item_names.SENTINEL),
+    item_names.SENTINEL_COMBAT_RECONSTRUCTION: "Attacking an enemy restores 1 second of Reconstruction cooldown.",
+    item_names.SENTINEL_ADANIUM_CASING: "Sentinels gain +20 maximum life and +1 armor.",
     item_names.STALKER_PHASE_REACTOR: "Stalker War Council upgrade.\nStalkers restore 80 shields over 5 seconds after they Blink.",
     item_names.DRAGOON_PHALANX_SUIT: "Dragoon War Council upgrade.\nDragoons gain +1 range, move slightly faster, and can form tighter formations.",
     item_names.INSTIGATOR_MODERNIZED_SERVOS: "Instigator War Council upgrade.\nInstigators move 28% faster.",
+    item_names.INSTIGATOR_IHAN_COIL: "Whenever the Instigator uses Blink, it will fire an additional Particle Disruptor shot at enemies in front of it.",
     item_names.ADEPT_DISRUPTIVE_TRANSFER: "Adept War Council upgrade.\nAdept shades apply a debuff to enemies they touch, increasing damage taken by +5.",
-    item_names.SLAYER_PHASE_BLINK: "Slayer War Council ability.\nSlayers can now blink. After blinking, the Slayer's next attack within 8 seconds deals double damage.",
+    item_names.SLAYER_PHASE_BLINK: inspect.cleandoc("""
+        Slayer War Council ability.
+        Slayers can now blink. After blinking, the Slayer's next attack within 8 seconds is overcharged.
+        Overcharged attacks deal double damage.
+    """),
+    item_names.SLAYER_NYON_OVERCHARGE: inspect.cleandoc("""
+        Slayers gain an overcharged attack every 14 seconds.
+        Overcharged attacks deal double damage.
+        Additionally causes all overcharged attacks to deal damage in a small area.
+    """),
+    item_names.SLAYER_PHASE_ALIGNMENT: "Reduces Phasing Armor cooldown by 1 second.",
     item_names.AVENGER_KRYHAS_CLOAK: "Avenger War Council upgrade.\nAvengers are now permanently cloaked.",
     item_names.DARK_TEMPLAR_LESSER_SHADOW_FURY: "Dark Templar War Council ability.\nDark Templar gain two strikes of their Shadow Fury ability.",
     item_names.DARK_TEMPLAR_GREATER_SHADOW_FURY: "Dark Templar War Council ability.\nDark Templar gain three strikes of their Shadow Fury ability.",
@@ -1130,7 +1161,7 @@ item_descriptions = {
     item_names.MISTWING_PHANTOM_DASH: "Mist Wing War Council ability.\n" + _ability_desc("Mist Wings", "Phantom Dash", "dashes forward to cover some distance quickly. Deals damage in a line if the Mist Wing is cloaked"),
     item_names.SUPPLICANT_SACRIFICE: "Supplicant War Council ability.\nAllows Supplicants to sacrifice themselves to save nearby units from death.",
 
-    
+
     item_names.SOA_CHRONO_SURGE: "The Spear of Adun increases a target structure's unit warp in and research speeds by +1000% for 20 seconds.",
     item_names.SOA_PROGRESSIVE_PROXY_PYLON: inspect.cleandoc("""
         Level 1: The Spear of Adun quickly warps in a Pylon to a target location.
@@ -1150,7 +1181,8 @@ item_descriptions = {
     item_names.QUATRO: "All friendly Protoss units gain the equivalent of their +1 armor, attack, and shield upgrades.",
     item_names.NEXUS_OVERCHARGE: "The Protoss Nexus gains a long-range auto-attack.",
     item_names.ORBITAL_ASSIMILATORS: "Assimilators automatically harvest Vespene Gas without the need for Probes.",
-    item_names.WARP_HARMONIZATION: "Stargates and Robotics Facilities can transform to utilize Warp In technology. Warp In cooldowns are 20% faster than original build times.",
+    item_names.WARP_HARMONIZATION: "Robotics Facilities can transform to utilize Warp In technology. Warp In cooldowns are 20% faster than original build times.",
+    item_names.WARP_HARMONIZATION_STARGATE: "Stargates can transform to utilize Warp In technology. Warp In cooldowns are 20% faster than original build times.",
     item_names.GUARDIAN_SHELL: "The Spear of Adun passively shields friendly Protoss units before death, making them invulnerable for 5 seconds. Each unit can only be shielded once every 60 seconds.",
     item_names.RECONSTRUCTION_BEAM: "The Spear of Adun will passively heal mechanical units for 5 and non-biological structures for 10 life per second. Up to 3 targets can be repaired at once.",
     item_names.OVERWATCH: "Once per second, the Spear of Adun will last-hit a damaged enemy unit that is below 50 health.",
@@ -1164,7 +1196,16 @@ item_descriptions = {
         Level 2: No longer consumes or requires charges.
     """),
     item_names.PROBE_WARPIN: "You can warp in additonal Probes from your Nexus to any visible location within a Pylon's power field. Has a 30 second cooldown and can store up to 2 charges.",
-    item_names.ELDER_PROBES: "You can warp in a group of 5 Elder Probes, tough builders from the Brood War. Elder Probes can provide a Power Field and get reconstructed on death. Can only be used once per mission.",
+    item_names.ELDER_PROBES: "You can warp in a group of 5 Elder Probes, tough builders from the Brood War.\nElder Probes can provide a Power Field and get reconstructed on death.\nCan only be used once per mission.",
+    item_names.PYLON_PSI_ENHANCEMENT: "Pylons provide 50% more supply and a larger power field.",
+    item_names.NEXUS_KHAYDARIN_CORE: "Each Nexus provides a power field.",
+    item_names.NEXUS_CHRONO_EFFICIENCY: "Doubles the effect of Nexus Chrono Boost.",
+    item_names.PROTOSS_BUILDING_SHIELDS: "Protoss structures gain +2 shield armor and can regenerate shield in combat.",
+    item_names.PRODUCTION_EFFICIENCY: "Reduces the cost of Gateways by 50 minerals.\nReduces the cost of Robotics Facilities and Stargates by 50 vespene.",
+    item_names.OPERATIONAL_EFFICIENCY_FLEET_BEACON: "Removes the vespene cost and halves the mineral cost of Fleet Beacons.\nAlso allows building a Fleet Beacon without a Stargate.",
+    item_names.OPERATIONAL_EFFICIENCY_ROBOTICS_BAY: "Removes the vespene cost and halves the mineral cost of Robotics Bays.\nAlso allows building a Robotics Bay without a Robotics Facility.",
+    item_names.OPERATIONAL_EFFICIENCY_TEMPLAR_ARCHIVE: "Removes the vespene cost and halves the mineral cost of Templar Archives.\nAlso allows building a Templar Archive without a Gateway.",
+    item_names.OPERATIONAL_EFFICIENCY_DARK_SHRINE: "Removes the vespene cost and halves the mineral cost of Dark Shrines.\nAlso allows building a Dark Shrine without a Gateway.",
 }
 
 # Key descriptions

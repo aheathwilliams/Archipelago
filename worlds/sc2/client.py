@@ -56,7 +56,7 @@ from .locations import (
 )
 from .mission_tables import (
     lookup_id_to_mission, SC2Campaign, MissionInfo,
-    lookup_id_to_campaign, SC2Mission, campaign_mission_table, 
+    lookup_id_to_campaign, SC2Mission, campaign_mission_table,
     lookup_id_to_race, SC2Race,
 )
 import colorama
@@ -663,7 +663,7 @@ class StarcraftClientProcessor(ClientCommandProcessor):
                 shutil.move(backup_folder, folder)
         finally:
             os.remove(tempzip)
-    
+
         return True
 
 
@@ -831,7 +831,7 @@ class SC2Context(CommonContext):
             self.game_speed = GameSpeed.option_faster
 
     def unpack_hero_presence(self, slot_data: dict[str, str]) -> dict[SC2Campaign, dict[SC2Race, int]]:
-        campaigns = [campaign for campaign in SC2Campaign if campaign != SC2Campaign.GLOBAL] 
+        campaigns = [campaign for campaign in SC2Campaign if campaign != SC2Campaign.GLOBAL]
         result: dict[SC2Campaign, dict[SC2Race, int]] = {campaign: {} for campaign in campaigns}
         for key, value in slot_data.items():
             campaign, race, = key.split(".")
@@ -839,7 +839,7 @@ class SC2Context(CommonContext):
         return result
 
     def default_hero_presence(self, kerrigan_present: bool = True) -> dict[SC2Campaign, dict[SC2Race, int]]:
-        if kerrigan_present: 
+        if kerrigan_present:
             return {
                 SC2Campaign.HOTS: {SC2Race.ZERG: HeroFlag.KERRIGAN.value},
                 SC2Campaign.NCO: {SC2Race.TERRAN: HeroFlag.NOVA.value},
@@ -1200,7 +1200,7 @@ class SC2Context(CommonContext):
         objectives = self.mission_id_to_location_ids[mission_id]
         for objective in objectives:
             yield get_location_id(mission_id, objective)
-    
+
     def locations_for_mission_id(self, mission_id: int) -> Iterable[int]:
         objectives = self.mission_id_to_location_ids[mission_id]
         for objective in objectives:
@@ -1213,8 +1213,8 @@ class SC2Context(CommonContext):
 
     def is_mission_completed(self, mission_id: int) -> bool:
         return get_location_id(mission_id, 0) in self.checked_locations
-    
-        
+
+
     async def trade_acquire_storage(self, keep_trying: bool = False) -> dict | None:
         # This function was largely taken from the Pokemon Emerald client
         """
@@ -1726,7 +1726,7 @@ def is_mod_update_available(owner: str, repo: str, api_version: str, metadata: s
 
     headers = {"Accept": 'application/vnd.github.v3+json'}
     url = f"https://api.github.com/repos/{owner}/{repo}/releases/tags/{api_version}"
-
+    r1: requests.Response | None = None
     try:
         r1 = requests.get(url, headers=headers)
         if r1.status_code == 200:
@@ -1743,11 +1743,13 @@ def is_mod_update_available(owner: str, repo: str, api_version: str, metadata: s
             sc2_logger.warning(f"Status code: {r1.status_code}")
             sc2_logger.warning(f"text: {r1.text}")
             return False
-    except requests.ConnectionError:
-        sc2_logger.warning("Failed to reach GitHub while checking for updates.")
+    except Exception as ex:
+        sc2_logger.warning(f"Failed to reach GitHub while checking for updates.")
+        sc2_logger.debug(ex)
         return False
     finally:
-        r1.close()
+        if r1:
+            r1.close()
 
 
 _has_forced_save = False
