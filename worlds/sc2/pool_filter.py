@@ -4,7 +4,7 @@ from typing import Callable, Dict, List, Set, Tuple, TYPE_CHECKING, Iterable
 from BaseClasses import Location, ItemClassification
 from .item import StarcraftItem, ItemFilterFlags, item_names, item_parents, item_groups
 from .item.item_tables import item_table, TerranItemType, ZergItemType, spear_of_adun_calldowns
-from .options import RequiredTactics
+from .options import RequiredTactics, UpgradeCullMode
 
 if TYPE_CHECKING:
     from . import SC2World
@@ -152,8 +152,11 @@ class ValidInventory:
         """Attempts to generate a reduced inventory that can fulfill the mission requirements."""
         inventory: List[StarcraftItem] = list(self.item_pool)
         requirements = mission_requirements
+        upgrade_cull_mode = self.world.options.upgrade_cull_mode.value
         min_upgrades_per_unit = self.world.options.min_number_of_upgrades.value
         max_upgrades_per_unit = self.world.options.max_number_of_upgrades.value
+        min_upgrades_per_item = self.world.options.min_number_of_upgrades_per_item.value
+        max_upgrades_per_item = self.world.options.max_number_of_upgrades_per_item.value
         if max_upgrades_per_unit > -1 and min_upgrades_per_unit > max_upgrades_per_unit:
             logging.getLogger("Starcraft 2").warning(
                 f"min upgrades per unit is greater than max upgrades per unit ({min_upgrades_per_unit} > {max_upgrades_per_unit}). "
@@ -204,7 +207,8 @@ class ValidInventory:
                     break
                 if ItemFilterFlags.Uncullable & item.filter_flags:
                     continue
-                attempt_removal(item, remove_flag=ItemFilterFlags.Culled)
+                if not attempt_removal(item, remove_flag=ItemFilterFlags.Culled):
+                    remove_child_items(item, remove_flag=ItemFilterFlags.Culled)
 
         def request_minimum_items(group: List[StarcraftItem], requested_minimum) -> None:
             for item in group:
@@ -238,6 +242,7 @@ class ValidInventory:
 
         # Limit strains and aspects per unit
         strain_group_list = [
+            item_groups.queen_strains,
             item_groups.zergling_strains,
             item_groups.roach_strains,
             item_groups.baneling_strains,
@@ -258,26 +263,97 @@ class ValidInventory:
             self.world.random.shuffle(group_items)
             cull_items_over_maximum(group_items, self.world.options.max_aspects_per_zerg_unit.value)
 
+        # Protoss variants per unit
+        protoss_variant_group_list = [
+            item_groups.zealot_variants,
+            item_groups.stalker_variants,
+            item_groups.sentry_variants,
+            item_groups.high_templar_variants,
+            item_groups.dark_templar_variants,
+            item_groups.immortal_variants,
+            item_groups.colossus_variants,
+            item_groups.phoenix_variants,
+            item_groups.void_ray_variants,
+            # item_groups.carrier_variants,
+            item_groups.scout_variants,
+            # item_groups.tempest_variants,
+            item_groups.detector_variants,
+            item_groups.capital_ship_variants,
+            item_groups.mothership_variants,
+        ]
+        for variant_group in protoss_variant_group_list:
+            group_items = [item for item in inventory if item.name in variant_group]
+            self.world.random.shuffle(group_items)
+            cull_items_over_maximum(group_items, self.world.options.max_variants_per_protoss_unit.value)
+
+        # Terran unit roles
+        terran_mutually_exclusive_group_list = [
+            item_groups.basic_troopers,
+            item_groups.anti_ground_infantry,
+            item_groups.specialists,
+            item_groups.medics,
+            item_groups.scout_mechs,
+            item_groups.mobile_mechs,
+            item_groups.goliaths,
+            item_groups.siege_tanks,
+            item_groups.thors,
+            item_groups.fighters,
+            item_groups.anti_ground_air,
+            item_groups.battlecruisers,
+            item_groups.transports,
+            item_groups.terran_detectors,
+        ]
+        for variant_group in terran_mutually_exclusive_group_list:
+            group_items = [item for item in inventory if item.name in variant_group]
+            self.world.random.shuffle(group_items)
+            cull_items_over_maximum(group_items, 1)
+
         # Determine item groups to be constrained by min/max upgrades per unit
         group_to_item: Dict[str, List[StarcraftItem]] = {}
-        group: str = ""
         for group, group_member_names in item_parents.item_upgrade_groups.items():
             group_to_item[group] = []
             for item_name in group_member_names:
                 inventory_items = self.item_name_to_item.get(item_name, [])
                 group_to_item[group].extend(item for item in inventory_items if ItemFilterFlags.Removed not in item.filter_flags)
 
+        group_to_min_upgrades: Dict[str, int] = {}
+        group_to_max_upgrades: Dict[str, int] = {}
+        for group_name in group_to_item:
+            if upgrade_cull_mode in (UpgradeCullMode.option_per_item, UpgradeCullMode.option_random_per_item):
+                group_min = min_upgrades_per_item.get(group_name, min_upgrades_per_unit)
+                group_max = max_upgrades_per_item.get(group_name, max_upgrades_per_unit)
+            else:
+                group_min = min_upgrades_per_unit
+                group_max = max_upgrades_per_unit
+            if group_max > -1 and group_min > group_max:
+                logging.getLogger("Starcraft 2").warning(
+                    f"min upgrades per group is greater than max upgrades per group ({group_name}: {group_min} > {group_max}). "
+                    f"Setting both to minimum value ({group_min})"
+                )
+                group_max = group_min
+            if upgrade_cull_mode == UpgradeCullMode.option_random_per_item and group_max > -1:
+                group_target = self.world.random.randint(group_min, group_max)
+                group_min = group_target
+                group_max = group_target
+            group_to_min_upgrades[group_name] = group_min
+            group_to_max_upgrades[group_name] = group_max
+        has_any_group_minimum = any(group_min > 0 for group_min in group_to_min_upgrades.values())
+
         # Limit the maximum number of upgrades
-        if max_upgrades_per_unit != -1:
-            for group_name, group_items in group_to_item.items():
-                self.world.random.shuffle(group_to_item[group])
-                cull_items_over_maximum(group_items, max_upgrades_per_unit)
+        for group_name, group_items in group_to_item.items():
+            max_upgrades_for_group = group_to_max_upgrades[group_name]
+            if max_upgrades_for_group == -1:
+                continue
+            self.world.random.shuffle(group_items)
+            cull_items_over_maximum(group_items, max_upgrades_for_group)
         
         # Requesting minimum upgrades for items that have already been locked/placed when minimum required
-        if min_upgrades_per_unit != -1:
-            for group_name, group_items in group_to_item.items():
-                self.world.random.shuffle(group_items)
-                request_minimum_items(group_items, min_upgrades_per_unit)
+        for group_name, group_items in group_to_item.items():
+            min_upgrades_for_group = group_to_min_upgrades[group_name]
+            if min_upgrades_for_group == -1:
+                continue
+            self.world.random.shuffle(group_items)
+            request_minimum_items(group_items, min_upgrades_for_group)
 
         # Kerrigan max abilities
         kerrigan_actives = [item for item in inventory if item.name in item_groups.kerrigan_active_abilities]
@@ -337,15 +413,18 @@ class ValidInventory:
                 return False
             item = self.world.random.choice(removable)
             # Do not remove item if it would drop upgrades below minimum
-            if min_upgrades_per_unit > 0:
+            if has_any_group_minimum:
                 group_name = None
                 parent = item_table[item.name].parent
                 if parent is not None:
                     group_name = item_parents.parent_present[parent].constraint_group
                 if group_name is not None:
+                    min_upgrades_for_group = group_to_min_upgrades.get(group_name, min_upgrades_per_unit)
+                    if min_upgrades_for_group <= 0:
+                        min_upgrades_for_group = 0
                     children = group_to_item.get(group_name, [])
                     children = [x for x in children if not (ItemFilterFlags.CulledOrBetter & x.filter_flags)]
-                    if len(children) <= min_upgrades_per_unit:
+                    if len(children) <= min_upgrades_for_group:
                         # Attempt to remove a parent instead, if possible
                         dont_remove = ItemFilterFlags.Removed|dont_remove_flags
                         parent_items = [

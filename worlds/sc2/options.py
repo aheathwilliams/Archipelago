@@ -11,7 +11,7 @@ from Options import (
 )
 from Utils import get_fuzzy_results
 from BaseClasses import PlandoOptions
-from .item import item_names, item_tables, item_groups
+from .item import item_names, item_tables, item_groups, item_parents
 from .mission_tables import (
     SC2Campaign, SC2Mission, lookup_name_to_mission, MissionPools, get_missions_with_any_flags_in_list,
     campaign_mission_table, SC2Race, MissionFlag
@@ -526,6 +526,107 @@ class MaxNumberOfUpgrades(Range):
     range_start = -1
     range_end = MAX_UPGRADES_OPTION
     default = -1
+
+
+class UpgradeCullMode(Choice):
+    """
+    Controls how minimum/maximum upgrade limits are applied.
+
+    Global: Use global min/max options as currently implemented.
+    Per Item: Use per-item override dictionaries for each upgrade group, with global values as fallback.
+    Random Per Item: Randomly picks an upgrade target per group within each group's min/max range.
+    """
+    display_name = "Upgrade Cull Mode"
+    option_global = 0
+    option_per_item = 1
+    option_random_per_item = 2
+    default = option_global
+
+
+class Sc2UpgradeLimitDict(OptionCounter, VerifyKeys, Mapping[str, int]):
+    """Mapping for upgrade-group-specific min/max limits."""
+    default = {}
+    supports_weighting = False
+    verify_item_name = False
+    display_name = "Unnamed upgrade limit dictionary"
+    min: int = -1
+    max: int = MAX_UPGRADES_OPTION
+    valid_keys = set(item_parents.item_upgrade_groups.keys())
+
+    def __init__(self, value: dict[str, int]):
+        self.value: dict[str, int] = {key: val for key, val in value.items()}
+
+    @classmethod
+    def from_any(cls, data: list[str] | dict[str, int]) -> 'Sc2UpgradeLimitDict':
+        if isinstance(data, list):
+            raise ValueError(
+                f"{cls.display_name}: Cannot convert from list. "
+                f"Use dict syntax (no dashes, 'value: number' syntax)."
+            )
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if not isinstance(value, int):
+                    raise ValueError(
+                        f"Invalid type in '{cls.display_name}': "
+                        f"element '{key}' maps to '{value}', expected an integer"
+                    )
+                if value < cls.min:
+                    raise ValueError(
+                        f"Invalid value for '{cls.display_name}': "
+                        f"element '{key}' maps to {value}, which is less than the minimum ({cls.min})"
+                    )
+                if value > cls.max:
+                    raise ValueError(
+                        f"Invalid value for '{cls.display_name}': "
+                        f"element '{key}' maps to {value}, which is greater than the maximum ({cls.max})"
+                    )
+            return cls(data)
+        raise NotImplementedError(f"{cls.display_name}: Cannot convert from non-dictionary, got {type(data)}")
+
+    def verify(self, world: Type['World'], player_name: str, plando_options: PlandoOptions) -> None:
+        new_value: dict[str, int] = {}
+        case_insensitive_mapping = {group_name.casefold(): group_name for group_name in self.valid_keys}
+        for group_name in self.value:
+            normalized = case_insensitive_mapping.get(group_name.casefold(), group_name)
+            new_value[normalized] = new_value.get(normalized, 0) + self.value[group_name]
+        self.value = new_value
+        for group_name in self.value:
+            if group_name not in self.valid_keys:
+                picks = get_fuzzy_results(group_name, list(self.valid_keys), limit=1)
+                raise Exception(
+                    f"Upgrade group {group_name} from option {self} is not a valid upgrade group. "
+                    f"Did you mean '{picks[0][0]}' ({picks[0][1]}% sure)"
+                )
+
+    @classmethod
+    def get_option_name(cls, value: dict[str, int]) -> str:
+        return ", ".join(f"{key}: {v}" for key, v in value.items())
+
+    def __getitem__(self, item: str) -> int:
+        return self.value.__getitem__(item)
+
+    def __iter__(self) -> Iterator[str]:
+        return self.value.__iter__()
+
+    def __len__(self) -> int:
+        return self.value.__len__()
+
+
+class MinNumberOfUpgradesPerItem(Sc2UpgradeLimitDict):
+    """
+    Per-item override for the minimum number of upgrades.
+    Keys are upgrade groups identified by their base item, for example: Marine, Zealot, Archon.
+    """
+    display_name = "Minimum number of upgrades per item"
+    min = 0
+
+
+class MaxNumberOfUpgradesPerItem(Sc2UpgradeLimitDict):
+    """
+    Per-item override for the maximum number of upgrades.
+    Keys are upgrade groups identified by their base item, for example: Marine, Zealot, Archon.
+    """
+    display_name = "Maximum number of upgrades per item"
 
 
 class MercenaryHighlanders(DefaultOnToggle):
@@ -1362,6 +1463,20 @@ class MaxAspectsPerZergUnit(Range):
     range_end = 2
     default = 2
 
+class MaxVariantsPerProtossUnit(Range):
+    """Maximum number of variants per Protoss unit in the item pool."""
+    display_name = "Max Variants Per Protoss Unit"
+    range_start = 1
+    range_end = 5
+    default = 5
+
+class MaxUnitsPerRace(Range):
+    """Maximum number of units per race in the item pool."""
+    display_name = "Max Units Per Race"
+    range_start = 1
+    range_end = 400
+    default = 15
+
 class LinkMercenariesToBaseItem(Toggle):
     """Links mercenary units to their base unit counterparts."""
     display_name = "Link Mercenaries to Base Item"
@@ -1396,6 +1511,9 @@ class Starcraft2Options(PerGameCommonOptions):
     ensure_generic_items: EnsureGenericItems
     min_number_of_upgrades: MinNumberOfUpgrades
     max_number_of_upgrades: MaxNumberOfUpgrades
+    upgrade_cull_mode: UpgradeCullMode
+    min_number_of_upgrades_per_item: MinNumberOfUpgradesPerItem
+    max_number_of_upgrades_per_item: MaxNumberOfUpgradesPerItem
     mercenary_highlanders: MercenaryHighlanders
     max_upgrade_level: MaxUpgradeLevel
     generic_upgrade_missions: GenericUpgradeMissions
@@ -1454,6 +1572,8 @@ class Starcraft2Options(PerGameCommonOptions):
     mission_order_scouting: MissionOrderScouting
     max_strains_per_zerg_unit: MaxStrainsPerZergUnit
     max_aspects_per_zerg_unit: MaxAspectsPerZergUnit
+    max_variants_per_protoss_unit: MaxVariantsPerProtossUnit
+    max_units_per_race: MaxUnitsPerRace
     link_mercenaries_to_base_item: LinkMercenariesToBaseItem
 
     custom_mission_order: CustomMissionOrder
@@ -1488,6 +1608,9 @@ option_groups = [
         EnsureGenericItems,
         MinNumberOfUpgrades,
         MaxNumberOfUpgrades,
+        UpgradeCullMode,
+        MinNumberOfUpgradesPerItem,
+        MaxNumberOfUpgradesPerItem,
         MaxUpgradeLevel,
         GenericUpgradeMissions,
         GenericUpgradeResearch,

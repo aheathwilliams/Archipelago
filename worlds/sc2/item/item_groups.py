@@ -84,8 +84,22 @@ class ItemGroupNames:
     TERRAN_GENERIC_UPGRADES = "Terran Generic Upgrades"
     """+attack/armour upgrades"""
     BARRACKS_UNITS = "Barracks Units"
+    BASIC_TROOPERS = "Basic Trooper"
+    ANTI_GROUND_INFANTRY = "Anti-ground Infantry"
+    SPECIALISTS = "Specialists"
+    MEDICS = "Medics"
     FACTORY_UNITS = "Factory Units"
+    SCOUT_MECHS = "Scout Mechs"
+    MOBILE_MECHS = "Mobile Mechs"
+    GOLIATHS = "Goliaths"
+    SIEGE_TANKS = "Siege Tanks"
+    THORS = "Thors"
     STARPORT_UNITS = "Starport Units"
+    FIGHTERS = "Fighters"
+    ANTI_GROUND_AIR = "Anti-ground Air"
+    BATTLECRUISERS = "Battlecruisers"
+    TRANSPORTS = "Transports"
+    TERRAN_DETECTORS = "Terran Detectors"
     WOL_UNITS = "WoL Units"
     WOL_MERCS = "WoL Mercenaries"
     WOL_BUILDINGS = "WoL Buildings"
@@ -131,6 +145,7 @@ class ItemGroupNames:
     HOTS_BUILDINGS = "HotS Buildings"
     HOTS_STRAINS = "HotS Strains"
     """Vanilla HotS strains (the upgrades you play a mini-mission for)"""
+    QUEEN_STRAINS = "Queen Strains"
     ZERGLING_STRAINS = "Zergling Strains"
     ROACH_STRAINS = "Roach Strains"
     HYDRALISK_ASPECTS = "Hydralisk Aspects"
@@ -183,8 +198,23 @@ class ItemGroupNames:
     PROTOSS_GENERIC_UPGRADES = "Protoss Generic Upgrades"
     """+attack/armour upgrades"""
     GATEWAY_UNITS = "Gateway Units"
+    ZEALOT_VARIANTS = "Zealot Variants"
+    STALKER_VARIANTS = "Stalker Variants"
+    SENTRY_VARIANTS = "Sentry Variants"
+    HIGH_TEMPLAR_VARIANTS = "High Templar Variants"
+    DARK_TEMPLAR_VARIANTS = "Dark Templar Variants"
     ROBO_UNITS = "Robo Units"
+    IMMORTAL_VARIANTS = "Immortal Variants"
+    COLOSSUS_VARIANTS = "Colossus Variants"
+    DETECTOR_VARIANTS = "Detector Variants"
     STARGATE_UNITS = "Stargate Units"
+    PHOENIX_VARIANTS = "Phoenix Variants"
+    SCOUT_VARIANTS = "Scout Variants"
+    VOID_RAY_VARIANTS = "Void Ray Variants"
+    CARRIER_VARIANTS = "Carrier Variants"
+    TEMPEST_VARIANTS = "Tempest Variants"
+    CAPITAL_SHIP_VARIANTS = "Capital Ship Variants"
+    MOTHERSHIP_VARIANTS = "Mothership Variants"
     PROPHECY_UNITS = "Prophecy Units"
     PROPHECY_BUILDINGS = "Prophecy Buildings"
     LOTV_UNITS = "LotV Units"
@@ -249,6 +279,18 @@ item_name_groups[ItemGroupNames.BARRACKS_UNITS] = barracks_units = (barracks_wa_
     item_names.MEDIC,
     item_names.FIELD_RESPONSE_THETA,
 ])
+item_name_groups[ItemGroupNames.BASIC_TROOPERS] = basic_troopers = [
+    item_names.MARINE, item_names.DOMINION_TROOPER, item_names.SON_OF_KORHAL,
+]
+item_name_groups[ItemGroupNames.ANTI_GROUND_INFANTRY] = anti_ground_infantry = [
+    item_names.FIREBAT, item_names.MARAUDER, item_names.HERC, item_names.AEGIS_GUARD,
+]
+item_name_groups[ItemGroupNames.SPECIALISTS] = specialists = [
+    item_names.GHOST, item_names.SPECTRE, #item_names.EMPERORS_SHADOW,
+]
+item_name_groups[ItemGroupNames.MEDICS] = medics = [
+    item_names.MEDIC, item_names.FIELD_RESPONSE_THETA,
+]
 factory_wa_group = [
     item_names.HELLION, item_names.VULTURE, item_names.GOLIATH, item_names.DIAMONDBACK,
     item_names.SIEGE_TANK, item_names.THOR, item_names.PREDATOR,
@@ -258,6 +300,21 @@ factory_wa_group = [
 item_name_groups[ItemGroupNames.FACTORY_UNITS] = factory_units = (factory_wa_group + [
     item_names.WIDOW_MINE,
 ])
+item_name_groups[ItemGroupNames.SCOUT_MECHS] = scout_mechs = [
+    item_names.HELLION, item_names.VULTURE,
+]
+item_name_groups[ItemGroupNames.MOBILE_MECHS] = mobile_mechs = [
+    item_names.DIAMONDBACK, item_names.CYCLONE, item_names.PREDATOR,
+]
+item_name_groups[ItemGroupNames.GOLIATHS] = goliaths = [
+    item_names.GOLIATH, item_names.BULWARK_COMPANY,
+]
+item_name_groups[ItemGroupNames.SIEGE_TANKS] = siege_tanks = [
+    item_names.SIEGE_TANK, item_names.SHOCK_DIVISION,
+]
+item_name_groups[ItemGroupNames.THORS] = thors = [
+    item_names.THOR, item_names.BLACKHAMMER,
+]
 starport_wa_group = [
     item_names.WRAITH, item_names.VIKING, item_names.BANSHEE,
     item_names.BATTLECRUISER, item_names.RAVEN_HUNTER_SEEKER_WEAPON,
@@ -269,6 +326,21 @@ item_name_groups[ItemGroupNames.STARPORT_UNITS] = starport_units = [
     item_names.BATTLECRUISER, item_names.HERCULES, item_names.SCIENCE_VESSEL, item_names.RAVEN,
     item_names.LIBERATOR, item_names.VALKYRIE, item_names.PRIDE_OF_AUGUSTRGRAD, item_names.SKY_FURY,
     item_names.EMPERORS_GUARDIAN, item_names.NIGHT_HAWK, item_names.NIGHT_WOLF,
+]
+item_name_groups[ItemGroupNames.FIGHTERS] = fighters = [
+    item_names.WRAITH, item_names.VIKING, item_names.VALKYRIE, item_names.NIGHT_HAWK, item_names.SKY_FURY,
+]
+item_name_groups[ItemGroupNames.ANTI_GROUND_AIR] = anti_ground_air = [
+    item_names.BANSHEE, item_names.NIGHT_WOLF, item_names.LIBERATOR, item_names.EMPERORS_GUARDIAN,
+]
+item_name_groups[ItemGroupNames.BATTLECRUISERS] = battlecruisers = [
+    item_names.BATTLECRUISER, item_names.PRIDE_OF_AUGUSTRGRAD,
+]
+item_name_groups[ItemGroupNames.TRANSPORTS] = transports = [
+    item_names.HERCULES, item_names.MEDIVAC,
+]
+item_name_groups[ItemGroupNames.TERRAN_DETECTORS] = terran_detectors = [
+    item_names.RAVEN, item_names.SCIENCE_VESSEL,
 ]
 item_name_groups[ItemGroupNames.TERRAN_MERCENARIES] = terran_mercenaries = [
     item_name for item_name, item_data in item_tables.item_table.items()
@@ -777,6 +849,9 @@ item_name_groups[ItemGroupNames.ZERG_LADDER_UNITS] = [
 item_name_groups[ItemGroupNames.HOTS_STRAINS] = hots_strains = [
     item_name for item_name, item_data in item_tables.item_table.items() if item_data.type == item_tables.ZergItemType.Strain
 ]
+item_name_groups[ItemGroupNames.QUEEN_STRAINS] = queen_strains = [
+    item_names.SWARM_QUEEN, item_names.HIVE_QUEEN,
+]
 item_name_groups[ItemGroupNames.ZERGLING_STRAINS] = zergling_strains = [
     item_names.ZERGLING_SWARMLING_STRAIN, item_names.ZERGLING_RAPTOR_STRAIN,
 ]
@@ -1004,11 +1079,32 @@ item_name_groups[ItemGroupNames.GATEWAY_UNITS] = gateway_units = [
     item_names.HIGH_TEMPLAR, item_names.SIGNIFIER, item_names.ASCENDANT,
     item_names.DARK_TEMPLAR, item_names.AVENGER, item_names.BLOOD_HUNTER,
 ]
+item_name_groups[ItemGroupNames.ZEALOT_VARIANTS] = zealot_variants = [
+    item_names.ZEALOT, item_names.CENTURION, item_names.SENTINEL, item_names.SUPPLICANT,
+]
+item_name_groups[ItemGroupNames.STALKER_VARIANTS] = stalker_variants = [
+    item_names.STALKER, item_names.SLAYER, item_names.INSTIGATOR, item_names.DRAGOON, item_names.ADEPT,
+]
+item_name_groups[ItemGroupNames.SENTRY_VARIANTS] = sentry_variants = [
+    item_names.SENTRY, item_names.HAVOC, item_names.ENERGIZER,
+]
+item_name_groups[ItemGroupNames.HIGH_TEMPLAR_VARIANTS] = high_templar_variants = [
+    item_names.DARK_ARCHON, item_names.HIGH_TEMPLAR, item_names.SIGNIFIER, item_names.ASCENDANT,
+]
+item_name_groups[ItemGroupNames.DARK_TEMPLAR_VARIANTS] = dark_templar_variants = [
+    item_names.DARK_TEMPLAR, item_names.AVENGER, item_names.BLOOD_HUNTER,
+]
 item_name_groups[ItemGroupNames.ROBO_UNITS] = robo_units = [
     item_names.WARP_PRISM, item_names.OBSERVER,
     item_names.IMMORTAL, item_names.ANNIHILATOR, item_names.VANGUARD, item_names.STALWART,
     item_names.COLOSSUS, item_names.WRATHWALKER,
     item_names.REAVER, item_names.DISRUPTOR,
+]
+item_name_groups[ItemGroupNames.IMMORTAL_VARIANTS] = immortal_variants = [
+    item_names.IMMORTAL, item_names.ANNIHILATOR, item_names.VANGUARD, item_names.STALWART,
+]
+item_name_groups[ItemGroupNames.COLOSSUS_VARIANTS] = colossus_variants = [
+    item_names.COLOSSUS, item_names.WRATHWALKER, item_names.REAVER, item_names.DISRUPTOR,
 ]
 item_name_groups[ItemGroupNames.STARGATE_UNITS] = stargate_units = [
     item_names.PHOENIX, item_names.SKIRMISHER, item_names.MIRAGE, item_names.CORSAIR,
@@ -1017,6 +1113,30 @@ item_name_groups[ItemGroupNames.STARGATE_UNITS] = stargate_units = [
     item_names.TEMPEST, item_names.SCOUT, item_names.MOTHERSHIP_TALDARIM,
     item_names.ARBITER, item_names.ORACLE, item_names.OPPRESSOR,
     item_names.CALADRIUS, item_names.MISTWING,
+]
+item_name_groups[ItemGroupNames.PHOENIX_VARIANTS] = phoenix_variants = [
+    item_names.PHOENIX, item_names.SKIRMISHER, item_names.MIRAGE, item_names.CORSAIR,
+]
+item_name_groups[ItemGroupNames.VOID_RAY_VARIANTS] = void_ray_variants = [
+    item_names.VOID_RAY, item_names.DESTROYER, item_names.PULSAR, item_names.DAWNBRINGER,
+]
+item_name_groups[ItemGroupNames.CARRIER_VARIANTS] = carrier_variants = [
+    item_names.CARRIER, item_names.SKYLORD, item_names.TRIREME,
+]
+item_name_groups[ItemGroupNames.SCOUT_VARIANTS] = scout_variants = [
+    item_names.SCOUT, item_names.OPPRESSOR, item_names.CALADRIUS, item_names.MISTWING,
+]
+item_name_groups[ItemGroupNames.TEMPEST_VARIANTS] = tempest_variants = [
+    item_names.TEMPEST, item_names.ARBITER,
+]
+item_name_groups[ItemGroupNames.MOTHERSHIP_VARIANTS] = mothership_variants = [
+    item_names.MOTHERSHIP_AIUR, item_names.MOTHERSHIP_TALDARIM, item_names.MOTHERSHIP_PURIFIER,
+]
+item_name_groups[ItemGroupNames.CAPITAL_SHIP_VARIANTS] = capital_ship_variants = (
+    carrier_variants + tempest_variants
+)
+item_name_groups[ItemGroupNames.DETECTOR_VARIANTS] = detector_variants = [
+    item_names.OBSERVER, item_names.ORACLE,
 ]
 item_name_groups[ItemGroupNames.NEXUS_UNITS] = nexus_units = [
     item_names.MOTHERSHIP_AIUR, item_names.MOTHERSHIP_PURIFIER,
